@@ -86,9 +86,6 @@ class HomeScreen extends ConsumerWidget {
 
             // Section 15: Footer
             const SliverToBoxAdapter(child: _AppFooter()),
-
-            // Spacer for bottom nav
-            const SliverToBoxAdapter(child: SizedBox(height: 100)),
           ],
         ),
     );
@@ -143,31 +140,10 @@ class _HomeHeader extends ConsumerWidget {
         children: [
           // Logo
           Flexible(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              decoration: BoxDecoration(
-                color: AppColors.primary,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(Icons.local_pharmacy, color: Colors.white, size: 20),
-                  const SizedBox(width: 8),
-                  Flexible(
-                    child: Text(
-                      'KERSBROOK',
-                      overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.manrope(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w900,
-                        fontSize: 14,
-                        letterSpacing: 0.5,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            child: Image.asset(
+              'assets/pharmacist_advice.png',
+              height: 40,
+              fit: BoxFit.contain,
             ),
           ),
           Row(
@@ -341,7 +317,7 @@ class _PrimaryServiceCards extends ConsumerWidget {
         crossAxisCount: 2,
         mainAxisSpacing: 12,
         crossAxisSpacing: 12,
-        childAspectRatio: 0.85,
+        childAspectRatio: 0.82,
         children: [
           _ServiceCard(
             title: 'Order prescriptions',
@@ -355,17 +331,6 @@ class _PrimaryServiceCards extends ConsumerWidget {
             },
           ),
           _ServiceCard(
-            title: 'Shop online',
-            description: 'Browse eligible pharmacy, health, beauty and home-care products.',
-            icon: Icons.shopping_bag,
-            buttonText: 'Shop Now',
-            color: const Color(0xFFF1F8E9),
-            iconColor: Colors.green,
-            onTap: () {
-              ref.read(bottomNavIndexProvider.notifier).state = 1;
-            },
-          ),
-          _ServiceCard(
             title: 'Free Webster-pak®',
             description: 'Regular medicines professionally organised by day and time.',
             icon: Icons.calendar_view_month,
@@ -376,6 +341,17 @@ class _PrimaryServiceCards extends ConsumerWidget {
               Navigator.of(context).push(
                 MaterialPageRoute(builder: (_) => const WebsterPakScreen()),
               );
+            },
+          ),
+          _ServiceCard(
+            title: 'Shop online',
+            description: 'Browse eligible pharmacy, health, beauty and home-care products.',
+            icon: Icons.shopping_bag,
+            buttonText: 'Shop Now',
+            color: const Color(0xFFF1F8E9),
+            iconColor: Colors.green,
+            onTap: () {
+              ref.read(bottomNavIndexProvider.notifier).state = 1;
             },
           ),
           _ServiceCard(
@@ -434,7 +410,8 @@ class _ServiceCard extends StatelessWidget {
           ],
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
               padding: const EdgeInsets.all(8),
@@ -447,6 +424,7 @@ class _ServiceCard extends StatelessWidget {
             const SizedBox(height: 12),
             Text(
               title,
+              textAlign: TextAlign.center,
               style: GoogleFonts.manrope(
                 fontSize: 14,
                 fontWeight: FontWeight.w800,
@@ -454,9 +432,11 @@ class _ServiceCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 6),
-            Expanded(
+            SizedBox(
+              height: 45, // Fixed height so the button is perfectly aligned across all cards
               child: Text(
                 description,
+                textAlign: TextAlign.center,
                 style: GoogleFonts.manrope(
                   fontSize: 10,
                   color: AppColors.textLight,
@@ -466,9 +446,10 @@ class _ServiceCard extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 4),
             Text(
               buttonText,
+              textAlign: TextAlign.center,
               style: GoogleFonts.manrope(
                 fontSize: 11,
                 fontWeight: FontWeight.w700,
@@ -1209,7 +1190,7 @@ class _AppFooter extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: AppColors.secondary,
-      padding: const EdgeInsets.all(32),
+      padding: const EdgeInsets.fromLTRB(32, 32, 32, 100),
       child: Column(
         children: [
           const Icon(Icons.local_pharmacy, color: Colors.white, size: 40),

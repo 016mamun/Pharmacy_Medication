@@ -9,6 +9,7 @@ import 'package:pharmacy_medication/features/home/providers/home_provider.dart';
 import 'package:pharmacy_medication/shared/widgets/circular_icon_button.dart';
 import 'package:pharmacy_medication/shared/widgets/app_network_image.dart';
 import 'package:pharmacy_medication/features/shop/presentation/screens/product_details_screen.dart';
+import 'package:pharmacy_medication/features/cart/presentation/screens/cart_screen.dart';
 
 class WishlistScreen extends ConsumerWidget {
   const WishlistScreen({super.key});

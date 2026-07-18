@@ -11,6 +11,7 @@ class PharmacistAdviceFormScreen extends StatefulWidget {
 
 class _PharmacistAdviceFormScreenState extends State<PharmacistAdviceFormScreen> {
   final _formKey = GlobalKey<FormState>();
+  String _preferredMethod = 'Phone Call';
 
   @override
   Widget build(BuildContext context) {
@@ -30,14 +31,16 @@ class _PharmacistAdviceFormScreenState extends State<PharmacistAdviceFormScreen>
               ),
               const SizedBox(height: 12),
               Text(
-                'Contact Kersbrook Pharmacy for advice about medicines, interactions, side effects and safe use.',
-                style: GoogleFonts.manrope(fontSize: 14, color: AppColors.textLight, height: 1.5),
+                'Contact Kersbrook Pharmacy for advice regarding:\n• Product selection\n• Side effects\n• Interactions\n• Storage\n• Missed doses',
+                style: GoogleFonts.manrope(fontSize: 14, color: AppColors.textLight, height: 1.6),
+              ),
+              const SizedBox(height: 24),
+              Text(
+                'Note: Please do not submit extensive clinical information through this form.',
+                style: GoogleFonts.manrope(fontSize: 12, color: Colors.brown, fontStyle: FontStyle.italic),
               ),
               const SizedBox(height: 32),
-              _buildTextField('Your Name', Icons.person),
-              _buildTextField('Phone Number', Icons.phone),
-              _buildTextField('Your Question / Concern', Icons.help_outline, maxLines: 5),
-              const SizedBox(height: 24),
+              
               Text(
                 'Preferred Callback Method',
                 style: GoogleFonts.manrope(fontSize: 15, fontWeight: FontWeight.bold),
@@ -45,13 +48,30 @@ class _PharmacistAdviceFormScreenState extends State<PharmacistAdviceFormScreen>
               const SizedBox(height: 12),
               Wrap(
                 spacing: 12,
-                children: [
-                  ChoiceChip(label: const Text('Phone Call'), selected: true, onSelected: (_) {}),
-                  ChoiceChip(label: const Text('Email'), selected: false, onSelected: (_) {}),
-                  ChoiceChip(label: const Text('Text Message'), selected: false, onSelected: (_) {}),
-                ],
+                children: ['Phone Call', 'Email', 'Text Message'].map((method) {
+                  return ChoiceChip(
+                    label: Text(method),
+                    selected: _preferredMethod == method,
+                    onSelected: (selected) {
+                      if (selected) {
+                        setState(() => _preferredMethod = method);
+                      }
+                    },
+                    selectedColor: AppColors.primaryLight,
+                  );
+                }).toList(),
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 24),
+
+              _buildTextField('Your Name', Icons.person),
+              if (_preferredMethod == 'Email')
+                _buildTextField('Email Address', Icons.email)
+              else
+                _buildTextField('Phone Number', Icons.phone),
+                
+              _buildTextField('Your Question / Concern', Icons.help_outline, maxLines: 5),
+              const SizedBox(height: 24),
+
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(

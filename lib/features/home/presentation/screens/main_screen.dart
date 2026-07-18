@@ -47,6 +47,15 @@ class MainScreen extends ConsumerWidget {
           index: currentIndex,
           children: screens,
         ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const PharmacistAdviceFormScreen()));
+          },
+          backgroundColor: Colors.blue,
+          elevation: 4,
+          shape: const CircleBorder(),
+          child: const Icon(Icons.chat_bubble, color: Colors.white),
+        ),
         bottomNavigationBar: const _StickyBottomActionBar(),
       ),
     );
@@ -119,63 +128,66 @@ class _StickyBottomActionBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentIndex = ref.watch(bottomNavIndexProvider);
 
-    return Container(
-      height: 70,
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 10,
-            offset: const Offset(0, -2),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: _BottomBarItem(
-              icon: Icons.medication,
-              label: 'Prescription',
-              isActive: currentIndex == 2,
-              onTap: () => ref.read(bottomNavIndexProvider.notifier).state = 2,
+    return SafeArea(
+      top: false,
+      child: Container(
+        height: 70,
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.1),
+              blurRadius: 10,
+              offset: const Offset(0, -2),
             ),
-          ),
-          Expanded(
-            child: _BottomBarItem(
-              icon: Icons.shopping_bag,
-              label: 'Shop',
-              isActive: currentIndex == 1,
-              onTap: () => ref.read(bottomNavIndexProvider.notifier).state = 1,
+          ],
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: _BottomBarItem(
+                icon: Icons.medication,
+                label: 'Prescription',
+                isActive: currentIndex == 2,
+                onTap: () => ref.read(bottomNavIndexProvider.notifier).state = 2,
+              ),
             ),
-          ),
-          // Center Home button or different layout?
-          // Brief says: Order Prescription, Shop, Call, Book
-          Expanded(
-            child: _BottomBarItem(
-              icon: Icons.home,
-              label: 'Home',
-              isActive: currentIndex == 0,
-              onTap: () => ref.read(bottomNavIndexProvider.notifier).state = 0,
+            Expanded(
+              child: _BottomBarItem(
+                icon: Icons.shopping_bag,
+                label: 'Shop',
+                isActive: currentIndex == 1,
+                onTap: () => ref.read(bottomNavIndexProvider.notifier).state = 1,
+              ),
             ),
-          ),
-          Expanded(
-            child: _BottomBarItem(
-              icon: Icons.phone,
-              label: 'Call',
-              isActive: currentIndex == 3,
-              onTap: () => ref.read(bottomNavIndexProvider.notifier).state = 3,
+            // Center Home button or different layout?
+            // Brief says: Order Prescription, Shop, Call, Book
+            Expanded(
+              child: _BottomBarItem(
+                icon: Icons.home,
+                label: 'Home',
+                isActive: currentIndex == 0,
+                onTap: () => ref.read(bottomNavIndexProvider.notifier).state = 0,
+              ),
             ),
-          ),
-          Expanded(
-            child: _BottomBarItem(
-              icon: Icons.event,
-              label: 'Book',
-              isActive: currentIndex == 4,
-              onTap: () => ref.read(bottomNavIndexProvider.notifier).state = 4,
+            Expanded(
+              child: _BottomBarItem(
+                icon: Icons.phone,
+                label: 'Call',
+                isActive: currentIndex == 3,
+                onTap: () => ref.read(bottomNavIndexProvider.notifier).state = 3,
+              ),
             ),
-          ),
-        ],
+            Expanded(
+              child: _BottomBarItem(
+                icon: Icons.event,
+                label: 'Book',
+                isActive: currentIndex == 4,
+                onTap: () => ref.read(bottomNavIndexProvider.notifier).state = 4,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

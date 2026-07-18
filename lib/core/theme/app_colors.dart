@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   // Primary palette from design spec
-  static const Color primary = Color(0xFF006D5B); // Updated to Pharmacist Advice Green
+  static const Color primary = Color(0xFF00408A); // rgba(0, 64, 138)
   static const Color secondary = Color(0xFF003D4D); // Supporting dark blue/teal
   static const Color accent = Color(0xFFE4002B); // Contrasting red for primary buttons (Pharmacist Advice often has red accents)
   static const Color background = Color(0xFFF8F9F9);
