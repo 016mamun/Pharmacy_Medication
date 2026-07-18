@@ -68,8 +68,8 @@ final cartSubtotalProvider = Provider<double>((ref) {
 final promoCodeProvider = StateProvider<String>((ref) => '');
 final discountProvider = StateProvider<double>((ref) => 0.0);
 
-// Delivery charge
-const double deliveryCharge = 7.0;
+// Delivery charge in AUD (standard post baseline; actual charge calculated at checkout)
+const double deliveryCharge = 9.95;
 
 // Cart total
 final cartTotalProvider = Provider<double>((ref) {

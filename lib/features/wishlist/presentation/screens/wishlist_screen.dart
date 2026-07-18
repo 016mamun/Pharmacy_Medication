@@ -55,7 +55,7 @@ class WishlistScreen extends ConsumerWidget {
                     icon: Icons.shopping_cart_outlined,
                     iconSize: 22,
                     onTap: () {
-                      ref.read(bottomNavIndexProvider.notifier).state = 3;
+                      Navigator.push(context, MaterialPageRoute(builder: (_) => const CartScreen()));
                     },
                   ),
                 ],

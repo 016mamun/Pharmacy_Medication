@@ -45,7 +45,11 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                     icon: Icons.arrow_back_ios_new_rounded,
                     iconSize: 18,
                     onTap: () {
-                      ref.read(bottomNavIndexProvider.notifier).state = 0;
+                      if (Navigator.canPop(context)) {
+                        Navigator.pop(context);
+                      } else {
+                        ref.read(bottomNavIndexProvider.notifier).state = 0;
+                      }
                     },
                   ),
                   Expanded(
@@ -159,25 +163,25 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                             children: [
                               _SummaryRow(
                                 label: 'Sub Total',
-                                value: 'AED ${subtotal.toStringAsFixed(2)}',
+                                value: '\$${subtotal.toStringAsFixed(2)} AUD',
                               ),
                               const SizedBox(height: 12),
                               _SummaryRow(
                                 label: 'Delivery Charge',
                                 value:
-                                    'AED ${deliveryCharge.toStringAsFixed(2)}',
+                                    '\$${deliveryCharge.toStringAsFixed(2)} AUD',
                               ),
                               const SizedBox(height: 12),
                               _SummaryRow(
                                 label: 'Discount',
-                                value: 'AED ${discount.toStringAsFixed(2)}',
+                                value: '−\$${discount.toStringAsFixed(2)} AUD',
                               ),
                               const SizedBox(height: 16),
                               const Divider(color: AppColors.divider),
                               const SizedBox(height: 16),
                               _SummaryRow(
                                 label: 'Total',
-                                value: 'AED ${total.toStringAsFixed(2)}',
+                                value: '\$${total.toStringAsFixed(2)} AUD',
                                 isBold: true,
                               ),
                             ],
@@ -285,7 +289,7 @@ class _CartItemCard extends ConsumerWidget {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  'AED ${item.product.price.toStringAsFixed(2)}',
+                  '\$${item.product.price.toStringAsFixed(2)} AUD',
                   style: GoogleFonts.manrope(
                     fontSize: 14,
                     fontWeight: FontWeight.w800,

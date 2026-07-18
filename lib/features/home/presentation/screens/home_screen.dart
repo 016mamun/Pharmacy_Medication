@@ -8,12 +8,16 @@ import 'package:pharmacy_medication/features/services/presentation/screens/webst
 import 'package:pharmacy_medication/features/services/presentation/screens/vaccination_screen.dart';
 import 'package:pharmacy_medication/features/services/presentation/screens/medadvisor_info_screen.dart';
 import 'package:pharmacy_medication/shared/widgets/app_network_image.dart';
+import 'package:pharmacy_medication/features/cart/providers/cart_provider.dart';
 
 import 'package:pharmacy_medication/features/cart/presentation/screens/cart_screen.dart';
 import 'package:pharmacy_medication/features/shop/presentation/screens/product_details_screen.dart';
 
 import 'package:pharmacy_medication/features/profile/presentation/screens/contact_screen.dart';
 import 'package:pharmacy_medication/features/search/presentation/screens/search_screen.dart';
+import 'package:pharmacy_medication/features/about/presentation/screens/about_screen.dart';
+import 'package:pharmacy_medication/features/about/presentation/screens/legal_pages_screen.dart';
+import 'package:pharmacy_medication/features/about/presentation/screens/delivery_info_screen.dart';
 
 import 'package:pharmacy_medication/features/prescription/presentation/screens/escript_submission_screen.dart';
 import 'package:pharmacy_medication/features/prescription/presentation/screens/pharmacist_advice_form_screen.dart';
@@ -126,17 +130,18 @@ class _UtilityBar extends StatelessWidget {
   }
 }
 
-class _HomeHeader extends StatelessWidget {
+class _HomeHeader extends ConsumerWidget {
   const _HomeHeader();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final cartCount = ref.watch(cartCountProvider);
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Logo placeholder
+          // Logo
           Flexible(
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -167,17 +172,52 @@ class _HomeHeader extends StatelessWidget {
           ),
           Row(
             children: [
-              IconButton(onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const SearchScreen()));
-          }, icon: const Icon(Icons.search)),
-              const SizedBox(width: 8),
-              IconButton(onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (_) => const CartScreen()));
-              }, icon: const Icon(Icons.shopping_cart_outlined)),
-              const SizedBox(width: 8),
-              IconButton(onPressed: () {
-                Scaffold.of(context).openDrawer();
-              }, icon: const Icon(Icons.menu)),
+              IconButton(
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const SearchScreen()));
+                },
+                icon: const Icon(Icons.search),
+              ),
+              const SizedBox(width: 4),
+              // Cart icon with badge
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (_) => const CartScreen()));
+                    },
+                    icon: const Icon(Icons.shopping_cart_outlined),
+                  ),
+                  if (cartCount > 0)
+                    Positioned(
+                      top: 6,
+                      right: 6,
+                      child: Container(
+                        width: 16,
+                        height: 16,
+                        decoration: const BoxDecoration(
+                          color: AppColors.accent,
+                          shape: BoxShape.circle,
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          cartCount > 9 ? '9+' : '$cartCount',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 9,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+              const SizedBox(width: 4),
+              IconButton(
+                onPressed: () => Scaffold.of(context).openDrawer(),
+                icon: const Icon(Icons.menu),
+              ),
             ],
           ),
         ],
@@ -860,11 +900,11 @@ class _PromoSection extends StatelessWidget {
   }
 }
 
-class _FeaturedProductsHeader extends StatelessWidget {
+class _FeaturedProductsHeader extends ConsumerWidget {
   const _FeaturedProductsHeader();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
       child: Row(
@@ -878,12 +918,15 @@ class _FeaturedProductsHeader extends StatelessWidget {
               color: AppColors.textDark,
             ),
           ),
-          Text(
-            'View All',
-            style: GoogleFonts.manrope(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: AppColors.primary,
+          GestureDetector(
+            onTap: () => ref.read(bottomNavIndexProvider.notifier).state = 1,
+            child: Text(
+              'View All',
+              style: GoogleFonts.manrope(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: AppColors.primary,
+              ),
             ),
           ),
         ],
@@ -1189,10 +1232,10 @@ class _AppFooter extends StatelessWidget {
           const SizedBox(height: 32),
           const Divider(color: Colors.white24),
           const SizedBox(height: 24),
-          _footerLink('About Kersbrook Pharmacy'),
-          _footerLink('Privacy Policy'),
-          _footerLink('Terms of Service'),
-          _footerLink('Shipping & Returns'),
+          _footerLink('About Kersbrook Pharmacy', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AboutScreen()))),
+          _footerLink('Privacy Policy', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const LegalPagesScreen()))),
+          _footerLink('Terms of Service', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const LegalPagesScreen()))),
+          _footerLink('Shipping & Delivery', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const DeliveryInfoScreen()))),
           const SizedBox(height: 32),
           Text(
             '© 2024 Kersbrook Pharmacy. All Rights Reserved.',
@@ -1208,12 +1251,21 @@ class _AppFooter extends StatelessWidget {
     );
   }
 
-  Widget _footerLink(String label) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Text(
-        label,
-        style: GoogleFonts.manrope(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
+  Widget _footerLink(String label, [VoidCallback? onTap]) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Text(
+          label,
+          style: GoogleFonts.manrope(
+            color: Colors.white,
+            fontSize: 13,
+            fontWeight: FontWeight.w500,
+            decoration: onTap != null ? TextDecoration.underline : null,
+            decorationColor: Colors.white54,
+          ),
+        ),
       ),
     );
   }

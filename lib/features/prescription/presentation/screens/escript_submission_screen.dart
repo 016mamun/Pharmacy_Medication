@@ -12,6 +12,9 @@ class EScriptSubmissionScreen extends StatefulWidget {
 class _EScriptSubmissionScreenState extends State<EScriptSubmissionScreen> {
   final _formKey = GlobalKey<FormState>();
   String _collectionMethod = 'Delivery';
+  bool _consentRecorded = false;
+  bool _identityCheckAcknowledged = false;
+  final _addressController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -48,28 +51,66 @@ class _EScriptSubmissionScreenState extends State<EScriptSubmissionScreen> {
                 children: [
                   _radioOption('Delivery'),
                   const SizedBox(width: 20),
-                  _radioOption('Collection'),
+                  _radioOption('In-person Collection'),
                 ],
               ),
-              const SizedBox(height: 32),
-              _buildTextField('Full Name', Icons.person),
+              if (_collectionMethod == 'Delivery') ...[
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(color: Colors.amber.shade50, borderRadius: BorderRadius.circular(8)),
+                  child: Text(
+                    'Restricted Medicine Controls: Interstate delivery may be disabled based on state laws. PO Boxes and Parcel Lockers are strictly prohibited for prescription deliveries. Unattended delivery (Authority to Leave) is not permitted.',
+                    style: GoogleFonts.manrope(fontSize: 12, color: Colors.brown, height: 1.4),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                _buildTextField('Delivery Address (No PO Boxes)', Icons.home, controller: _addressController),
+              ],
+              const SizedBox(height: 24),
+              _buildTextField('Full Name (as per Medicare)', Icons.person),
               _buildTextField('Phone Number', Icons.phone),
               _buildTextField('Email Address', Icons.email),
-              const SizedBox(height: 32),
+              const SizedBox(height: 16),
+              CheckboxListTile(
+                title: Text('I consent to Kersbrook Pharmacy accessing my prescription record and verifying my identity.', style: GoogleFonts.manrope(fontSize: 12)),
+                value: _consentRecorded,
+                onChanged: (val) => setState(() => _consentRecorded = val ?? false),
+                controlAffinity: ListTileControlAffinity.leading,
+                contentPadding: EdgeInsets.zero,
+                activeColor: AppColors.primary,
+              ),
+              CheckboxListTile(
+                title: Text('I understand photo ID may be required upon collection or delivery.', style: GoogleFonts.manrope(fontSize: 12)),
+                value: _identityCheckAcknowledged,
+                onChanged: (val) => setState(() => _identityCheckAcknowledged = val ?? false),
+                controlAffinity: ListTileControlAffinity.leading,
+                contentPadding: EdgeInsets.zero,
+                activeColor: AppColors.primary,
+              ),
+              const SizedBox(height: 24),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
+                      if (!_consentRecorded || !_identityCheckAcknowledged) {
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please provide required consents.')));
+                        return;
+                      }
+                      if (_collectionMethod == 'Delivery' && _addressController.text.toLowerCase().contains('po box')) {
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('PO Boxes are not allowed for prescriptions.')));
+                        return;
+                      }
                       _showSuccessDialog();
                     }
                   },
-                  child: const Text('Submit eScript'),
+                  child: const Text('Submit for Pharmacist Review'),
                 ),
               ),
               const SizedBox(height: 16),
               Text(
-                'A pharmacist will review your submission and contact you to confirm price and supply.',
+                'Note: Automated checkout is disabled for prescriptions. A pharmacist will review clinical appropriateness, stock, and legal validity before confirming price and arranging payment.',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.manrope(fontSize: 11, color: AppColors.grey),
               ),
@@ -80,10 +121,11 @@ class _EScriptSubmissionScreenState extends State<EScriptSubmissionScreen> {
     );
   }
 
-  Widget _buildTextField(String label, IconData icon) {
+  Widget _buildTextField(String label, IconData icon, {TextEditingController? controller}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: TextFormField(
+        controller: controller,
         decoration: InputDecoration(
           labelText: label,
           prefixIcon: Icon(icon, size: 20),

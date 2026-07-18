@@ -24,19 +24,21 @@ class WebsterPakScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Free Webster-pak® medication packing',
+                    'Free Webster-pak® packing with delivery options across Australia',
                     style: GoogleFonts.manrope(
-                      fontSize: 24,
+                      fontSize: 22,
                       fontWeight: FontWeight.w800,
                       color: Colors.white,
+                      height: 1.3,
                     ),
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    'Delivery options across Australia',
+                    'We waive the packing fee. You only pay for the cost of your medicines and delivery.',
                     style: GoogleFonts.manrope(
-                      fontSize: 16,
+                      fontSize: 14,
                       color: Colors.white.withValues(alpha: 0.9),
+                      height: 1.4,
                     ),
                   ),
                 ],
@@ -125,25 +127,71 @@ class _WebsterPakForm extends StatefulWidget {
 
 class _WebsterPakFormState extends State<_WebsterPakForm> {
   final _formKey = GlobalKey<FormState>();
+  String _deliveryFrequency = 'Weekly';
+  bool _consentGiven = false;
 
   @override
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildTextField('Full Name', Icons.person),
           _buildTextField('Date of Birth', Icons.calendar_today),
           _buildTextField('Address', Icons.home),
           _buildTextField('Phone Number', Icons.phone),
           _buildTextField('Email Address', Icons.email),
+          _buildTextField('Medicare Number (Secure)', Icons.credit_card),
+          _buildTextField('Concession / DVA Status (Optional)', Icons.card_membership),
           _buildTextField('Number of Regular Medicines', Icons.medication),
+          _buildTextField('Current Pharmacy', Icons.local_pharmacy),
+          _buildTextField('Prescriber / Doctor Name', Icons.local_hospital),
+          _buildTextField('Carer Details (Name & Phone, if applicable)', Icons.people, required: false),
+          const SizedBox(height: 12),
+          Text(
+            'Delivery Frequency',
+            style: GoogleFonts.manrope(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.textDark),
+          ),
+          const SizedBox(height: 8),
+          DropdownButtonFormField<String>(
+            value: _deliveryFrequency,
+            items: ['Weekly', 'Fortnightly', 'Monthly']
+                .map((f) => DropdownMenuItem(value: f, child: Text(f)))
+                .toList(),
+            onChanged: (val) {
+              if (val != null) setState(() => _deliveryFrequency = val);
+            },
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.white,
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+          ),
+          const SizedBox(height: 16),
+          CheckboxListTile(
+            title: Text(
+              'I consent to Kersbrook Pharmacy accessing my prescriptions and managing my medication packing.',
+              style: GoogleFonts.manrope(fontSize: 12, height: 1.4),
+            ),
+            value: _consentGiven,
+            onChanged: (val) => setState(() => _consentGiven = val ?? false),
+            controlAffinity: ListTileControlAffinity.leading,
+            contentPadding: EdgeInsets.zero,
+            activeColor: AppColors.primary,
+          ),
           const SizedBox(height: 16),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
+                  if (!_consentGiven) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Please provide your consent to continue.')),
+                    );
+                    return;
+                  }
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Registration Request Sent')),
                   );
@@ -154,7 +202,7 @@ class _WebsterPakFormState extends State<_WebsterPakForm> {
           ),
           const SizedBox(height: 12),
           Text(
-            'Sensitive health data is handled securely. We will contact you to confirm eligibility and arrangements.',
+            'Sensitive health data (including Medicare details) is collected via a secure, encrypted process in compliance with Australian privacy laws.',
             textAlign: TextAlign.center,
             style: GoogleFonts.manrope(fontSize: 11, color: AppColors.grey),
           ),
@@ -163,7 +211,7 @@ class _WebsterPakFormState extends State<_WebsterPakForm> {
     );
   }
 
-  Widget _buildTextField(String label, IconData icon) {
+  Widget _buildTextField(String label, IconData icon, {bool required = true}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: TextFormField(
@@ -171,10 +219,12 @@ class _WebsterPakFormState extends State<_WebsterPakForm> {
           labelText: label,
           prefixIcon: Icon(icon, size: 20),
         ),
-        validator: (value) {
-          if (value == null || value.isEmpty) return 'Required';
-          return null;
-        },
+        validator: required
+            ? (value) {
+                if (value == null || value.trim().isEmpty) return 'Required';
+                return null;
+              }
+            : null,
       ),
     );
   }

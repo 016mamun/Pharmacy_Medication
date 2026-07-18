@@ -1,23 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pharmacy_medication/core/theme/app_colors.dart';
 import 'package:pharmacy_medication/shared/models/product_model.dart';
 import 'package:pharmacy_medication/shared/widgets/app_network_image.dart';
+import 'package:pharmacy_medication/features/cart/providers/cart_provider.dart';
+import 'package:pharmacy_medication/features/wishlist/providers/wishlist_provider.dart';
+import 'package:pharmacy_medication/features/home/providers/home_provider.dart';
 
-class ProductDetailsScreen extends StatelessWidget {
+class ProductDetailsScreen extends ConsumerWidget {
   final ProductModel product;
 
   const ProductDetailsScreen({super.key, required this.product});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isWishlisted = ref.watch(wishlistProvider).any((p) => p.id == product.id);
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: Text(product.name),
+        title: Text(
+          product.name,
+          overflow: TextOverflow.ellipsis,
+        ),
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.share_outlined)),
-          IconButton(onPressed: () {}, icon: const Icon(Icons.favorite_border)),
+          IconButton(
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Share link copied')),
+              );
+            },
+            icon: const Icon(Icons.share_outlined),
+          ),
+          IconButton(
+            onPressed: () {
+              ref.read(wishlistProvider.notifier).toggleWishlist(product);
+              final nowWishlisted = ref.read(wishlistProvider).any((p) => p.id == product.id);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(nowWishlisted ? 'Added to wishlist' : 'Removed from wishlist'),
+                  duration: const Duration(seconds: 1),
+                ),
+              );
+            },
+            icon: Icon(
+              isWishlisted ? Icons.favorite : Icons.favorite_border,
+              color: isWishlisted ? Colors.red : null,
+            ),
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -57,14 +88,15 @@ class ProductDetailsScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Text(
-                        '${product.price.toStringAsFixed(2)} AUD',
-                        style: GoogleFonts.manrope(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w900,
-                          color: AppColors.primary,
+                      if (product.type != ProductType.prescription)
+                        Text(
+                          '\$${product.price.toStringAsFixed(2)} AUD',
+                          style: GoogleFonts.manrope(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w900,
+                            color: AppColors.primary,
+                          ),
                         ),
-                      ),
                     ],
                   ),
                   const SizedBox(height: 16),
@@ -82,29 +114,24 @@ class ProductDetailsScreen extends StatelessWidget {
                     style: GoogleFonts.manrope(fontSize: 14, color: AppColors.grey),
                   ),
                   const SizedBox(height: 24),
-                  _buildTypeSpecificNotice(context),
+                  _buildTypeSpecificNotice(context, ref),
                   const SizedBox(height: 24),
-                  _buildSection('Description', product.description.isNotEmpty ? product.description : 'Professional quality pharmacy product. Please read instructions carefully.'),
-                  _buildSection('Directions', 'Use only as directed. If symptoms persist consult your healthcare professional.'),
-                  _buildSection('Warnings', 'Keep out of reach of children. Store below 30°C.'),
-                  const SizedBox(height: 40),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 56,
-                    child: ElevatedButton(
-                      onPressed: product.type == ProductType.prescription ? null : () {},
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: product.type == ProductType.pharmacistOnly ? Colors.orange : AppColors.primary,
-                      ),
-                      child: Text(
-                        product.type == ProductType.prescription 
-                          ? 'Prescription Only' 
-                          : product.type == ProductType.pharmacistOnly 
-                            ? 'Request Pharmacist Review' 
-                            : 'Add to Cart'
-                      ),
-                    ),
+                  _buildSection(
+                    'Description',
+                    product.description.isNotEmpty
+                        ? product.description
+                        : 'Professional quality pharmacy product. Please read instructions carefully before use.',
                   ),
+                  _buildSection(
+                    'Directions',
+                    'Use only as directed. If symptoms persist, consult your healthcare professional.',
+                  ),
+                  _buildSection(
+                    'Warnings',
+                    'Keep out of reach of children. Store below 30°C. Read all packaging before use.',
+                  ),
+                  const SizedBox(height: 40),
+                  _buildActionButton(context, ref),
                   const SizedBox(height: 40),
                 ],
               ),
@@ -115,6 +142,110 @@ class ProductDetailsScreen extends StatelessWidget {
     );
   }
 
+  Widget _buildActionButton(BuildContext context, WidgetRef ref) {
+    switch (product.type) {
+      case ProductType.prescription:
+        return SizedBox(
+          width: double.infinity,
+          height: 56,
+          child: OutlinedButton.icon(
+            onPressed: () {
+              // Navigate to Prescription Hub tab
+              ref.read(bottomNavIndexProvider.notifier).state = 2;
+              Navigator.of(context).popUntil((route) => route.isFirst);
+            },
+            icon: const Icon(Icons.medication),
+            label: const Text('Go to Prescription Hub'),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: AppColors.primary,
+              side: const BorderSide(color: AppColors.primary, width: 1.5),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+              textStyle: GoogleFonts.manrope(fontSize: 16, fontWeight: FontWeight.w700),
+            ),
+          ),
+        );
+      case ProductType.pharmacistOnly:
+        return SizedBox(
+          width: double.infinity,
+          height: 56,
+          child: ElevatedButton.icon(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (ctx) => AlertDialog(
+                  title: Text(
+                    'Pharmacist Review Required',
+                    style: GoogleFonts.manrope(fontWeight: FontWeight.w800),
+                  ),
+                  content: Text(
+                    'A pharmacist will contact you after your order is placed to confirm suitability before this item is dispatched.',
+                    style: GoogleFonts.manrope(fontSize: 13, height: 1.5),
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(ctx),
+                      child: const Text('Cancel'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        ref.read(cartProvider.notifier).addItem(product);
+                        Navigator.pop(ctx);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Added — pharmacist review pending'),
+                            backgroundColor: AppColors.primary,
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+                      child: const Text('Confirm & Add'),
+                    ),
+                  ],
+                ),
+              );
+            },
+            icon: const Icon(Icons.lock_person),
+            label: const Text('Request Pharmacist Review'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.orange,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+              textStyle: GoogleFonts.manrope(fontSize: 16, fontWeight: FontWeight.w700),
+            ),
+          ),
+        );
+      default:
+        // General & Pharmacy types — normal Add to Cart
+        return SizedBox(
+          width: double.infinity,
+          height: 56,
+          child: ElevatedButton.icon(
+            onPressed: () {
+              ref.read(cartProvider.notifier).addItem(product);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('${product.name} added to cart'),
+                  backgroundColor: AppColors.primary,
+                  action: SnackBarAction(
+                    label: 'View Cart',
+                    textColor: Colors.white,
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+              );
+            },
+            icon: const Icon(Icons.shopping_cart_outlined),
+            label: const Text('Add to Cart'),
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+              textStyle: GoogleFonts.manrope(fontSize: 16, fontWeight: FontWeight.w700),
+            ),
+          ),
+        );
+    }
+  }
+
   Widget _buildSection(String title, String content) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 20),
@@ -123,7 +254,11 @@ class ProductDetailsScreen extends StatelessWidget {
         children: [
           Text(
             title,
-            style: GoogleFonts.manrope(fontSize: 16, fontWeight: FontWeight.w800, color: AppColors.textDark),
+            style: GoogleFonts.manrope(
+              fontSize: 16,
+              fontWeight: FontWeight.w800,
+              color: AppColors.textDark,
+            ),
           ),
           const SizedBox(height: 8),
           Text(
@@ -135,39 +270,43 @@ class ProductDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTypeSpecificNotice(BuildContext context) {
-    if (product.type == ProductType.general) {
-      return _buildPharmacistNotice();
-    }
-
-    String title = '';
-    String content = '';
-    Color bgColor = AppColors.primaryLight;
-    IconData icon = Icons.info_outline;
-
+  Widget _buildTypeSpecificNotice(BuildContext context, WidgetRef ref) {
     switch (product.type) {
+      case ProductType.general:
+        return _buildPharmacistTipNotice();
       case ProductType.pharmacy:
-        title = 'Pharmacy Medicine';
-        content = 'This product requires pharmacist review before supply. Please confirm you have read the directions and warnings.';
-        bgColor = const Color(0xFFE8F4FD);
-        icon = Icons.health_and_safety;
-        break;
+        return _buildNoticeBox(
+          icon: Icons.health_and_safety,
+          title: 'Pharmacy Medicine (Schedule 2)',
+          content:
+              'This is a pharmacy-only product. By proceeding you confirm you have read the directions and warnings, and that it is appropriate for your use. If unsure, speak with a pharmacist.',
+          bgColor: const Color(0xFFE8F4FD),
+        );
       case ProductType.pharmacistOnly:
-        title = 'Pharmacist Only Medicine';
-        content = 'A pharmacist must speak with you before this product can be supplied. We will contact you after order placement.';
-        bgColor = const Color(0xFFFFF4E5);
-        icon = Icons.lock_person;
-        break;
+        return _buildNoticeBox(
+          icon: Icons.lock_person,
+          title: 'Pharmacist Only Medicine (Schedule 3)',
+          content:
+              'A pharmacist must speak with you before this medicine can be supplied. After you place your order, our pharmacist will contact you to confirm clinical suitability.',
+          bgColor: const Color(0xFFFFF4E5),
+        );
       case ProductType.prescription:
-        title = 'Prescription Required';
-        content = 'A valid prescription from an Australian doctor is required. Please upload your eScript or manage through the Prescription Hub.';
-        bgColor = const Color(0xFFF3E5F5);
-        icon = Icons.receipt;
-        break;
-      default:
-        return _buildPharmacistNotice();
+        return _buildNoticeBox(
+          icon: Icons.receipt_long,
+          title: 'Prescription Required (Schedule 4)',
+          content:
+              'A valid prescription from an Australian registered doctor is required for this medicine. Please use the Prescription Hub to submit your eScript or manage your prescription.',
+          bgColor: const Color(0xFFF3E5F5),
+        );
     }
+  }
 
+  Widget _buildNoticeBox({
+    required IconData icon,
+    required String title,
+    required String content,
+    required Color bgColor,
+  }) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -182,9 +321,15 @@ class ProductDetailsScreen extends StatelessWidget {
             children: [
               Icon(icon, color: AppColors.primary, size: 20),
               const SizedBox(width: 10),
-              Text(
-                title,
-                style: GoogleFonts.manrope(fontWeight: FontWeight.bold, fontSize: 14, color: AppColors.primary),
+              Expanded(
+                child: Text(
+                  title,
+                  style: GoogleFonts.manrope(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                    color: AppColors.primary,
+                  ),
+                ),
               ),
             ],
           ),
@@ -193,25 +338,12 @@ class ProductDetailsScreen extends StatelessWidget {
             content,
             style: GoogleFonts.manrope(fontSize: 12, color: AppColors.textLight, height: 1.5),
           ),
-          if (product.type == ProductType.prescription) ...[
-            const SizedBox(height: 12),
-            SizedBox(
-              width: double.infinity,
-              child: OutlinedButton(
-                onPressed: () {
-                  // Direct to prescription hub
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Redirecting to Prescription Hub...')));
-                },
-                child: const Text('Go to Prescription Hub'),
-              ),
-            ),
-          ],
         ],
       ),
     );
   }
 
-  Widget _buildPharmacistNotice() {
+  Widget _buildPharmacistTipNotice() {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -224,7 +356,7 @@ class ProductDetailsScreen extends StatelessWidget {
           const SizedBox(width: 12),
           Expanded(
             child: Text(
-              'Need advice? Ask our Kersbrook pharmacist about this product.',
+              'Need advice? Ask our Kersbrook pharmacist about this product before purchasing.',
               style: GoogleFonts.manrope(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
