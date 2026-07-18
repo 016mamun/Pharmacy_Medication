@@ -37,4 +37,6 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - assets/item/
+    - assets/health/
     - assets/pharmacist_advice.png

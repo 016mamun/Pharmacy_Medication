@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pharmacy_medication/core/theme/app_colors.dart';
-
+import 'package:pharmacy_medication/shared/widgets/card_3d.dart';
 import 'package:pharmacy_medication/features/services/presentation/screens/service_details_screen.dart';
 
 class ServicesListScreen extends StatelessWidget {
@@ -34,41 +34,9 @@ class ServicesListScreen extends StatelessWidget {
         itemCount: services.length,
         itemBuilder: (context, index) {
           final service = services[index];
-          return Container(
-            margin: const EdgeInsets.only(bottom: 16),
-            decoration: BoxDecoration(
-              color: AppColors.white,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: ListTile(
-              contentPadding: const EdgeInsets.all(16),
-              leading: Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: AppColors.primaryLight,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(service['icon'] as IconData, color: AppColors.primary),
-              ),
-              title: Text(
-                service['title'] as String,
-                style: GoogleFonts.manrope(fontWeight: FontWeight.w800, fontSize: 16),
-              ),
-              subtitle: Padding(
-                padding: const EdgeInsets.only(top: 4),
-                child: Text(
-                  service['desc'] as String,
-                  style: GoogleFonts.manrope(fontSize: 13, color: AppColors.textLight),
-                ),
-              ),
-              trailing: const Icon(Icons.arrow_forward_ios, size: 14, color: AppColors.grey),
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: Card3D(
               onTap: () {
                 Navigator.push(
                   context,
@@ -81,6 +49,29 @@ class ServicesListScreen extends StatelessWidget {
                   ),
                 );
               },
+              child: ListTile(
+                contentPadding: const EdgeInsets.all(16),
+                leading: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryLight,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(service['icon'] as IconData, color: AppColors.primary),
+                ),
+                title: Text(
+                  service['title'] as String,
+                  style: GoogleFonts.manrope(fontWeight: FontWeight.w800, fontSize: 16),
+                ),
+                subtitle: Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: Text(
+                    service['desc'] as String,
+                    style: GoogleFonts.manrope(fontSize: 13, color: AppColors.textLight),
+                  ),
+                ),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 14, color: AppColors.grey),
+              ),
             ),
           );
         },

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pharmacy_medication/shared/widgets/card_3d.dart';
 import 'package:pharmacy_medication/core/theme/app_colors.dart';
 import 'package:pharmacy_medication/features/home/providers/home_provider.dart';
 import 'package:pharmacy_medication/shared/models/product_model.dart';
@@ -21,6 +22,7 @@ import 'package:pharmacy_medication/features/about/presentation/screens/delivery
 
 import 'package:pharmacy_medication/features/prescription/presentation/screens/escript_submission_screen.dart';
 import 'package:pharmacy_medication/features/prescription/presentation/screens/pharmacist_advice_form_screen.dart';
+import 'package:pharmacy_medication/features/health_advice/presentation/screens/health_advice_article_screen.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -394,70 +396,57 @@ class _ServiceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return Card3D(
       onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.circular(10),
             ),
-          ],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: color,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Icon(icon, color: iconColor, size: 24),
+            child: Icon(icon, color: iconColor, size: 24),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            title,
+            textAlign: TextAlign.center,
+            style: GoogleFonts.manrope(
+              fontSize: 14,
+              fontWeight: FontWeight.w800,
+              color: AppColors.textDark,
             ),
-            const SizedBox(height: 12),
-            Text(
-              title,
+          ),
+          const SizedBox(height: 6),
+          SizedBox(
+            height: 45,
+            child: Text(
+              description,
               textAlign: TextAlign.center,
               style: GoogleFonts.manrope(
-                fontSize: 14,
-                fontWeight: FontWeight.w800,
-                color: AppColors.textDark,
+                fontSize: 10,
+                color: AppColors.textLight,
+                height: 1.4,
               ),
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
             ),
-            const SizedBox(height: 6),
-            SizedBox(
-              height: 45, // Fixed height so the button is perfectly aligned across all cards
-              child: Text(
-                description,
-                textAlign: TextAlign.center,
-                style: GoogleFonts.manrope(
-                  fontSize: 10,
-                  color: AppColors.textLight,
-                  height: 1.4,
-                ),
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-              ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            buttonText,
+            textAlign: TextAlign.center,
+            style: GoogleFonts.manrope(
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              color: AppColors.primary,
             ),
-            const SizedBox(height: 4),
-            Text(
-              buttonText,
-              textAlign: TextAlign.center,
-              style: GoogleFonts.manrope(
-                fontSize: 11,
-                fontWeight: FontWeight.w700,
-                color: AppColors.primary,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -923,60 +912,48 @@ class _ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return Card3D(
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (_) => ProductDetailsScreen(product: product)));
       },
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
+      borderRadius: 20,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: ClipRRect(
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+              child: AppNetworkImage(
+                imageUrl: product.imageUrl,
+                fit: BoxFit.cover,
+                width: double.infinity,
+              ),
             ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-                child: AppNetworkImage(
-                  imageUrl: product.imageUrl,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  product.name,
+                  style: GoogleFonts.manrope(fontSize: 12, fontWeight: FontWeight.w700),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    product.name,
-                    style: GoogleFonts.manrope(fontSize: 12, fontWeight: FontWeight.w700),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                const SizedBox(height: 4),
+                Text(
+                  '${product.price.toStringAsFixed(2)} AUD',
+                  style: GoogleFonts.manrope(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.primary,
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '${product.price.toStringAsFixed(2)} AUD',
-                    style: GoogleFonts.manrope(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w800,
-                      color: AppColors.primary,
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -987,53 +964,45 @@ class _LocalPharmacySection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.all(20),
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Proudly serving Kersbrook and the Adelaide Hills',
-            style: GoogleFonts.manrope(
-              fontSize: 18,
-              fontWeight: FontWeight.w800,
-              color: AppColors.textDark,
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: Card3D(
+        borderRadius: 24,
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Proudly serving Kersbrook and the Adelaide Hills',
+              style: GoogleFonts.manrope(
+                fontSize: 18,
+                fontWeight: FontWeight.w800,
+                color: AppColors.textDark,
+              ),
             ),
-          ),
-          const SizedBox(height: 16),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: AppNetworkImage(
-              imageUrl: 'https://images.pexels.com/photos/208512/pexels-photo-208512.jpeg?auto=compress&cs=tinysrgb&w=800',
-              height: 150,
+            const SizedBox(height: 16),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: AppNetworkImage(
+                imageUrl: 'https://images.pexels.com/photos/208512/pexels-photo-208512.jpeg?auto=compress&cs=tinysrgb&w=800',
+                height: 150,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
+            ),
+            const SizedBox(height: 16),
+            const _InfoRow(icon: Icons.location_on, text: '16 Scott St, Kersbrook SA 5231'),
+            const _InfoRow(icon: Icons.access_time, text: 'Mon-Fri: 9am-6pm | Sat: 9am-12pm'),
+            const SizedBox(height: 16),
+            SizedBox(
               width: double.infinity,
-              fit: BoxFit.cover,
+              child: OutlinedButton(
+                onPressed: () {},
+                child: const Text('View Location & Hours'),
+              ),
             ),
-          ),
-          const SizedBox(height: 16),
-          const _InfoRow(icon: Icons.location_on, text: '16 Scott St, Kersbrook SA 5231'),
-          const _InfoRow(icon: Icons.access_time, text: 'Mon-Fri: 9am-6pm | Sat: 9am-12pm'),
-          const SizedBox(height: 16),
-          SizedBox(
-            width: double.infinity,
-            child: OutlinedButton(
-              onPressed: () {},
-              child: const Text('View Location & Hours'),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -1065,6 +1034,24 @@ class _HealthInformationSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final articles = [
+      {
+        'title': 'Understanding Vitamin D',
+        'subtitle': 'Reviewed by Pharmacist • May 2024',
+        'image': 'assets/health/Vitamin_D.jpg'
+      },
+      {
+        'title': 'Managing Seasonal Allergies',
+        'subtitle': 'Reviewed by Pharmacist • Apr 2024',
+        'image': 'assets/health/managing_seasonal_allergies.jpg'
+      },
+      {
+        'title': 'Heart Health Fundamentals',
+        'subtitle': 'Reviewed by Pharmacist • Mar 2024',
+        'image': 'assets/health/heart_health_fundamentals.jpg'
+      },
+    ];
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1080,56 +1067,61 @@ class _HealthInformationSection extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: 220,
+          height: 240, // Increased height to prevent text clipping
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 14),
-            itemCount: 3,
+            itemCount: articles.length,
             itemBuilder: (context, index) {
-              return Container(
-                width: 200,
-                margin: const EdgeInsets.symmetric(horizontal: 6),
-                decoration: BoxDecoration(
-                  color: AppColors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.05),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                clipBehavior: Clip.antiAlias,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AppNetworkImage(
-                      imageUrl: 'https://images.pexels.com/photos/5910960/pexels-photo-5910960.jpeg?auto=compress&cs=tinysrgb&w=600',
-                      height: 100,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Understanding Vitamin D',
-                            style: GoogleFonts.manrope(fontSize: 13, fontWeight: FontWeight.w700),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
+              final article = articles[index];
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+                child: SizedBox(
+                  width: 200,
+                  child: Card3D(
+                    borderRadius: 20,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => HealthAdviceArticleScreen(
+                            title: article['title']!,
+                            imageUrl: article['image']!,
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'Reviewed by Pharmacist • May 2024',
-                            style: GoogleFonts.manrope(fontSize: 10, color: AppColors.grey),
+                        ),
+                      );
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AppNetworkImage(
+                          imageUrl: article['image']!,
+                          height: 100,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                article['title']!,
+                                style: GoogleFonts.manrope(fontSize: 13, fontWeight: FontWeight.w700),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                article['subtitle']!,
+                                style: GoogleFonts.manrope(fontSize: 10, color: AppColors.grey),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               );
             },

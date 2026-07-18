@@ -129,7 +129,7 @@ class SampleData {
     const ProductModel(
       id: '1',
       name: 'Panadol Optizorb 500mg',
-      imageUrl: 'https://images.pexels.com/photos/5910965/pexels-photo-5910965.jpeg?auto=compress&cs=tinysrgb&w=400',
+      imageUrl: 'assets/item/Voltaren.jpg',
       price: 6.50,
       unit: '20 Caplets',
       category: 'Pain Relief',
@@ -139,7 +139,7 @@ class SampleData {
     const ProductModel(
       id: '2',
       name: 'Nurofen Zavance Tablets',
-      imageUrl: 'https://images.pexels.com/photos/3652103/pexels-photo-3652103.jpeg?auto=compress&cs=tinysrgb&w=400',
+      imageUrl: 'assets/item/Telfast_180mg_10_Tablets_1000x.webp',
       price: 8.99,
       unit: '24 Tablets',
       category: 'Pain Relief',
@@ -149,7 +149,7 @@ class SampleData {
     const ProductModel(
       id: '3',
       name: 'Difflam Plus Anaesthetic Lozenge',
-      imageUrl: 'https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg?auto=compress&cs=tinysrgb&w=400',
+      imageUrl: 'assets/item/swisse_mens_ultivite.webp',
       price: 15.50,
       unit: '16 Lozenges',
       category: 'Cold & Flu',
@@ -160,7 +160,7 @@ class SampleData {
     const ProductModel(
       id: '4',
       name: 'Inner Health Plus Double Strength',
-      imageUrl: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=400',
+      imageUrl: 'assets/item/Blackmores.jpg',
       price: 49.99,
       unit: '30 Capsules',
       category: 'Vitamins',
@@ -174,7 +174,7 @@ class SampleData {
       product: const ProductModel(
         id: '5',
         name: 'Blackmores Odourless Fish Oil 1000',
-        imageUrl: 'https://images.pexels.com/photos/1435495/pexels-photo-1435495.jpeg?auto=compress&cs=tinysrgb&w=400',
+        imageUrl: 'assets/item/Blackmores.jpg',
         price: 24.50,
         unit: '400 Capsules',
         category: 'Supplements',
@@ -211,7 +211,7 @@ class SampleData {
     const ProductModel(
       id: '7',
       name: 'Swisse Men\'s Ultivite',
-      imageUrl: 'https://images.pexels.com/photos/1435495/pexels-photo-1435495.jpeg?auto=compress&cs=tinysrgb&w=400',
+      imageUrl: 'assets/item/swisse_mens_ultivite.webp',
       price: 39.99,
       unit: '120 Tablets',
       category: 'Vitamins',
@@ -221,7 +221,7 @@ class SampleData {
     const ProductModel(
       id: '8',
       name: 'Blackmores Vitamin D3 1000 IU',
-      imageUrl: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=400',
+      imageUrl: 'assets/item/Blackmores.jpg',
       price: 22.00,
       unit: '200 Capsules',
       category: 'Vitamins',
@@ -230,7 +230,7 @@ class SampleData {
     const ProductModel(
       id: '9',
       name: 'Sudafed Sinus + Pain Relief',
-      imageUrl: 'https://images.pexels.com/photos/2563339/pexels-photo-2563339.jpeg?auto=compress&cs=tinysrgb&w=400',
+      imageUrl: 'assets/item/sudafed.webp',
       price: 18.50,
       unit: '24 Tablets',
       category: 'Cold & Flu',
@@ -240,7 +240,7 @@ class SampleData {
     const ProductModel(
       id: '10',
       name: 'Telfast 180mg Tablets',
-      imageUrl: 'https://images.pexels.com/photos/3652103/pexels-photo-3652103.jpeg?auto=compress&cs=tinysrgb&w=400',
+      imageUrl: 'assets/item/Telfast_180mg_10_Tablets_1000x.webp',
       price: 39.50,
       unit: '50 Tablets',
       category: 'Allergies',
@@ -250,7 +250,7 @@ class SampleData {
     const ProductModel(
       id: '11',
       name: 'Voltaren Emulgel Joint Pain Relief',
-      imageUrl: 'https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg?auto=compress&cs=tinysrgb&w=400',
+      imageUrl: 'assets/item/Voltaren.jpg',
       price: 26.99,
       unit: '150g Tube',
       category: 'Pain Relief',
@@ -259,7 +259,7 @@ class SampleData {
     const ProductModel(
       id: '12',
       name: 'Amoxicillin 500mg (Antibiotic)',
-      imageUrl: 'https://images.pexels.com/photos/5910965/pexels-photo-5910965.jpeg?auto=compress&cs=tinysrgb&w=400',
+      imageUrl: 'assets/item/Amoxicillin.png',
       price: 0.00,
       unit: '20 Capsules',
       category: 'Prescription',

@@ -19,6 +19,16 @@ class AppNetworkImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (imageUrl.startsWith('assets/')) {
+      return Image.asset(
+        imageUrl,
+        height: height,
+        width: width,
+        fit: fit,
+        errorBuilder: (context, error, stackTrace) => _buildErrorWidget(),
+      );
+    }
+
     // Standard Image.network works better for CORS on web
     if (kIsWeb) {
       return Image.network(

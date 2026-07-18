@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pharmacy_medication/core/theme/app_colors.dart';
 import 'package:pharmacy_medication/shared/widgets/app_network_image.dart';
+import 'package:pharmacy_medication/shared/widgets/card_3d.dart';
+import 'package:pharmacy_medication/features/prescription/presentation/screens/pharmacist_advice_form_screen.dart';
 
 class HealthAdviceArticleScreen extends StatelessWidget {
   final String title;
@@ -18,6 +20,10 @@ class HealthAdviceArticleScreen extends StatelessWidget {
           SliverAppBar(
             expandedHeight: 250,
             pinned: true,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20, color: Colors.white),
+              onPressed: () => Navigator.pop(context),
+            ),
             flexibleSpace: FlexibleSpaceBar(
               title: Text(
                 title,
@@ -61,7 +67,7 @@ class HealthAdviceArticleScreen extends StatelessWidget {
                   _buildSectionTitle('Key Recommendations'),
                   _buildParagraph('• Maintain a balanced diet and regular exercise.\n• Consult your pharmacist before starting new supplements.\n• Keep a record of your medications and symptoms.\n• Schedule regular health check-ups.'),
                   const SizedBox(height: 32),
-                  _buildContactCard(),
+                  _buildContactCard(context),
                   const SizedBox(height: 60),
                 ],
               ),
@@ -89,34 +95,44 @@ class HealthAdviceArticleScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildContactCard() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+  Widget _buildContactCard(BuildContext context) {
+    return Card3D(
+      borderRadius: 20,
+      padding: const EdgeInsets.all(24),
+      baseColor: AppColors.primaryLight,
       child: Column(
         children: [
-          Text(
-            'Need Personal Advice?',
-            style: GoogleFonts.manrope(fontWeight: FontWeight.w800, fontSize: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.health_and_safety, color: AppColors.primary),
+              const SizedBox(width: 8),
+              Text(
+                'Need Personal Advice?',
+                style: GoogleFonts.manrope(fontWeight: FontWeight.w800, fontSize: 16, color: AppColors.primary),
+              ),
+            ],
           ),
           const SizedBox(height: 12),
           Text(
             'Our pharmacists are here to help you with specific questions about your health and medications.',
             textAlign: TextAlign.center,
-            style: GoogleFonts.manrope(fontSize: 13, color: AppColors.textLight),
+            style: GoogleFonts.manrope(fontSize: 13, color: AppColors.textDark, height: 1.5),
           ),
-          const SizedBox(height: 20),
-          OutlinedButton(onPressed: () {}, child: const Text('Speak to a Pharmacist')),
+          const SizedBox(height: 24),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const PharmacistAdviceFormScreen()));
+              },
+              icon: const Icon(Icons.chat_bubble_outline, size: 18),
+              label: const Text('Speak to a Pharmacist'),
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 14),
+              ),
+            ),
+          ),
         ],
       ),
     );
