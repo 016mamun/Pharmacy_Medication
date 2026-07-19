@@ -574,31 +574,49 @@ class _NationwideServiceSection extends StatelessWidget {
           _stepRow('3', 'Select an available delivery option', Icons.local_shipping_outlined),
           _stepRow('4', 'Receive tracking information', Icons.location_on_outlined),
           const SizedBox(height: 32),
-          Wrap(
-            spacing: 12,
-            runSpacing: 12,
+          Column(
             children: [
-              ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => const EScriptSubmissionScreen()));
-                },
-                icon: const Icon(Icons.send, size: 16, color: AppColors.primary),
-                label: const Text('Send eScript'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: AppColors.primary,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  elevation: 0,
-                  textStyle: GoogleFonts.manrope(fontSize: 13, fontWeight: FontWeight.bold),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => const EScriptSubmissionScreen()));
+                      },
+                      icon: const Icon(Icons.send, size: 16, color: AppColors.primary),
+                      label: const FittedBox(child: Text('Send eScript')),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: AppColors.primary,
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        elevation: 0,
+                        textStyle: GoogleFonts.manrope(fontSize: 13, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: _ActionButton(
+                      text: 'Use MedAdvisor',
+                      icon: Icons.phone_android,
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => const MedAdvisorInfoScreen()));
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Center(
+                child: _ActionButton(
+                  text: 'Ask a Pharmacist',
+                  icon: Icons.chat_bubble_outline,
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => const PharmacistAdviceFormScreen()));
+                  },
                 ),
               ),
-              _ActionButton(text: 'Use MedAdvisor', icon: Icons.phone_android, onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (_) => const MedAdvisorInfoScreen()));
-              }),
-              _ActionButton(text: 'Ask a Pharmacist', icon: Icons.chat_bubble_outline, onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (_) => const PharmacistAdviceFormScreen()));
-              }),
             ],
           ),
         ],
@@ -650,11 +668,11 @@ class _ActionButton extends StatelessWidget {
     return OutlinedButton.icon(
       onPressed: onPressed,
       icon: Icon(icon, size: 16),
-      label: Text(text),
+      label: FittedBox(child: Text(text)),
       style: OutlinedButton.styleFrom(
         foregroundColor: Colors.white,
         side: BorderSide(color: Colors.white.withValues(alpha: 0.5)),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         textStyle: GoogleFonts.manrope(fontSize: 13, fontWeight: FontWeight.w600),
       ),
