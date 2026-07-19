@@ -47,10 +47,11 @@ class _EScriptSubmissionScreenState extends State<EScriptSubmissionScreen> {
                 style: GoogleFonts.manrope(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark),
               ),
               const SizedBox(height: 12),
-              Row(
+              Wrap(
+                spacing: 20,
+                runSpacing: 8,
                 children: [
                   _radioOption('Delivery'),
-                  const SizedBox(width: 20),
                   _radioOption('In-person Collection'),
                 ],
               ),
@@ -163,6 +164,7 @@ class _EScriptSubmissionScreenState extends State<EScriptSubmissionScreen> {
 
   Widget _radioOption(String value) {
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Radio<String>(
           value: value,

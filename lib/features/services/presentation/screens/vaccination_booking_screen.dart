@@ -48,7 +48,10 @@ class _VaccinationBookingScreenState extends State<VaccinationBookingScreen> {
         controlsBuilder: (context, details) {
           return Padding(
             padding: const EdgeInsets.only(top: 16),
-            child: Row(
+            child: Wrap(
+              spacing: 12,
+              runSpacing: 8,
+              crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 ElevatedButton(
                   onPressed: details.onStepContinue,
@@ -57,13 +60,11 @@ class _VaccinationBookingScreenState extends State<VaccinationBookingScreen> {
                     style: GoogleFonts.manrope(fontWeight: FontWeight.w700),
                   ),
                 ),
-                if (_currentStep > 0) ...[
-                  const SizedBox(width: 12),
+                if (_currentStep > 0)
                   TextButton(
                     onPressed: details.onStepCancel,
                     child: const Text('Back'),
                   ),
-                ],
               ],
             ),
           );
@@ -103,6 +104,7 @@ class _VaccinationBookingScreenState extends State<VaccinationBookingScreen> {
           Step(
             title: Text('Select Service', style: GoogleFonts.manrope(fontWeight: FontWeight.bold)),
             content: DropdownButtonFormField<String>(
+              isExpanded: true,
               value: _selectedService,
               items: ['General Vaccination', 'Influenza (Flu)', 'Whooping Cough (dTpa)', 'Travel Vaccination', 'Other']
                   .map((s) => DropdownMenuItem(value: s, child: Text(s)))

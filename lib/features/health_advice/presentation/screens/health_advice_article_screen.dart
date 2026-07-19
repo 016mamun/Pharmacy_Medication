@@ -43,20 +43,32 @@ class HealthAdviceArticleScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
+                  Wrap(
+                    spacing: 16,
+                    runSpacing: 8,
+                    alignment: WrapAlignment.spaceBetween,
                     children: [
-                      const Icon(Icons.calendar_today, size: 14, color: AppColors.grey),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Last Reviewed: July 2024',
-                        style: GoogleFonts.manrope(fontSize: 12, color: AppColors.grey),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.calendar_today, size: 14, color: AppColors.grey),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Last Reviewed: July 2024',
+                            style: GoogleFonts.manrope(fontSize: 12, color: AppColors.grey),
+                          ),
+                        ],
                       ),
-                      const Spacer(),
-                      const Icon(Icons.verified_user, size: 14, color: AppColors.primary),
-                      const SizedBox(width: 4),
-                      Text(
-                        'Pharmacist Reviewed',
-                        style: GoogleFonts.manrope(fontSize: 12, color: AppColors.primary, fontWeight: FontWeight.bold),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.verified_user, size: 14, color: AppColors.primary),
+                          const SizedBox(width: 4),
+                          Text(
+                            'Pharmacist Reviewed',
+                            style: GoogleFonts.manrope(fontSize: 12, color: AppColors.primary, fontWeight: FontWeight.bold),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -102,8 +114,9 @@ class HealthAdviceArticleScreen extends StatelessWidget {
       baseColor: AppColors.primaryLight,
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          Wrap(
+            alignment: WrapAlignment.center,
+            crossAxisAlignment: WrapCrossAlignment.center,
             children: [
               const Icon(Icons.health_and_safety, color: AppColors.primary),
               const SizedBox(width: 8),

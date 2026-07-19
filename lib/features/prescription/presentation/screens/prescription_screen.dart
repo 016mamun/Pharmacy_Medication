@@ -216,7 +216,7 @@ class _PrescriptionOption extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: BorderRadius.circular(20),
@@ -232,14 +232,14 @@ class _PrescriptionOption extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: color,
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(icon, color: iconColor, size: 28),
+              child: Icon(icon, color: iconColor, size: 24),
             ),
-            const SizedBox(width: 16),
+            const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -247,24 +247,25 @@ class _PrescriptionOption extends StatelessWidget {
                   Text(
                     title,
                     style: GoogleFonts.manrope(
-                      fontSize: 16,
+                      fontSize: 15,
                       fontWeight: FontWeight.w800,
                       color: AppColors.textDark,
                     ),
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 4),
                   Text(
                     description,
                     style: GoogleFonts.manrope(
-                      fontSize: 12,
+                      fontSize: 11,
                       color: AppColors.textLight,
-                      height: 1.5,
+                      height: 1.4,
                     ),
                   ),
                 ],
               ),
             ),
-            const Icon(Icons.chevron_right, color: AppColors.grey),
+            const SizedBox(width: 4),
+            const Icon(Icons.chevron_right, color: AppColors.grey, size: 18),
           ],
         ),
       ),

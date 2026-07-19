@@ -51,17 +51,20 @@ class MedAdvisorInfoScreen extends StatelessWidget {
                     style: GoogleFonts.manrope(fontSize: 18, fontWeight: FontWeight.w800, color: AppColors.textDark),
                   ),
                   const SizedBox(height: 16),
-                  Row(
+                  Wrap(
+                    spacing: 12,
+                    runSpacing: 12,
                     children: [
-                      Expanded(
+                      SizedBox(
+                        width: (MediaQuery.of(context).size.width - 60) / (MediaQuery.of(context).size.width < 350 ? 1 : 2),
                         child: _AppStoreButton(
                           label: 'App Store',
                           icon: Icons.apple,
                           onTap: () {},
                         ),
                       ),
-                      const SizedBox(width: 12),
-                      Expanded(
+                      SizedBox(
+                        width: (MediaQuery.of(context).size.width - 60) / (MediaQuery.of(context).size.width < 350 ? 1 : 2),
                         child: _AppStoreButton(
                           label: 'Google Play',
                           icon: Icons.android,
@@ -118,11 +121,14 @@ class _AppStoreButton extends StatelessWidget {
     return ElevatedButton.icon(
       onPressed: onTap,
       icon: Icon(icon, size: 18),
-      label: Text(label),
+      label: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(label),
+      ),
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
-        padding: const EdgeInsets.symmetric(vertical: 14),
+        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
     );

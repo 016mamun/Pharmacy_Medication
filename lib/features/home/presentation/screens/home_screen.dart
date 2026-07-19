@@ -30,66 +30,71 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return SafeArea(
-      child: CustomScrollView(
-        slivers: [
-            // Section 1: Utility Bar
-            const SliverToBoxAdapter(child: _UtilityBar()),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final isNarrow = constraints.maxWidth < 350;
+          return CustomScrollView(
+            slivers: [
+              // Section 1: Utility Bar
+              const SliverToBoxAdapter(child: _UtilityBar()),
 
-            // Section 2: Header
-            const SliverToBoxAdapter(child: _HomeHeader()),
+              // Section 2: Header
+              const SliverToBoxAdapter(child: _HomeHeader()),
 
-            // Section 3: Hero Banner
-            const SliverToBoxAdapter(child: _HeroBanner()),
+              // Section 3: Hero Banner
+              const SliverToBoxAdapter(child: _HeroBanner()),
 
-            // Section 4: Primary Service Cards
-            const SliverToBoxAdapter(child: _PrimaryServiceCards()),
+              // Section 4: Primary Service Cards
+              const SliverToBoxAdapter(child: _PrimaryServiceCards()),
 
-            // Section 5: Nationwide Prescription Service
-            const SliverToBoxAdapter(child: _NationwideServiceSection()),
+              // Section 5: Nationwide Prescription Service
+              const SliverToBoxAdapter(child: _NationwideServiceSection()),
 
-            // Section 6: Shop Popular Categories
-            const SliverToBoxAdapter(child: _PopularCategories()),
+              // Section 6: Shop Popular Categories
+              const SliverToBoxAdapter(child: _PopularCategories()),
 
-            // Section 7-10: Promotions
-            const SliverToBoxAdapter(child: _WebsterPakPromo()),
-            const SliverToBoxAdapter(child: _VaccinationPromo()),
-            const SliverToBoxAdapter(child: _MedAdvisorPromo()),
-            const SliverToBoxAdapter(child: _PharmacistAdvicePromo()),
+              // Section 7-10: Promotions
+              const SliverToBoxAdapter(child: _WebsterPakPromo()),
+              const SliverToBoxAdapter(child: _VaccinationPromo()),
+              const SliverToBoxAdapter(child: _MedAdvisorPromo()),
+              const SliverToBoxAdapter(child: _PharmacistAdvicePromo()),
 
-            // Section 11: Featured Products
-            const SliverToBoxAdapter(child: _FeaturedProductsHeader()),
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              sliver: SliverGrid(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.75,
-                  crossAxisSpacing: 14,
-                  mainAxisSpacing: 14,
-                ),
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    final product = SampleData.featuredProducts[index];
-                    return _ProductCard(product: product);
-                  },
-                  childCount: SampleData.featuredProducts.length,
+              // Section 11: Featured Products
+              const SliverToBoxAdapter(child: _FeaturedProductsHeader()),
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                sliver: SliverGrid(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: isNarrow ? 1 : (isNarrow ? 1 : 2), // We'll compute it dynamically or just use fixed
+                    mainAxisSpacing: 14,
+                    crossAxisSpacing: 14,
+                    mainAxisExtent: 260,
+                  ),
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      final product = SampleData.featuredProducts[index];
+                      return _ProductCard(product: product);
+                    },
+                    childCount: SampleData.featuredProducts.length,
+                  ),
                 ),
               ),
-            ),
 
-            // Section 12: Local Pharmacy Section
-            const SliverToBoxAdapter(child: _LocalPharmacySection()),
+              // Section 12: Local Pharmacy Section
+              const SliverToBoxAdapter(child: _LocalPharmacySection()),
 
-            // Section 13: Health Information
-            const SliverToBoxAdapter(child: _HealthInformationSection()),
+              // Section 13: Health Information
+              const SliverToBoxAdapter(child: _HealthInformationSection()),
 
-            // Section 14: Trust Strip
-            const SliverToBoxAdapter(child: _TrustStrip()),
+              // Section 14: Trust Strip
+              const SliverToBoxAdapter(child: _TrustStrip()),
 
-            // Section 15: Footer
-            const SliverToBoxAdapter(child: _AppFooter()),
-          ],
-        ),
+              // Section 15: Footer
+              const SliverToBoxAdapter(child: _AppFooter()),
+            ],
+          );
+        },
+      ),
     );
   }
 }
@@ -100,7 +105,7 @@ class _UtilityBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      padding: const EdgeInsets.fromLTRB(20, 8, 20, 4),
       color: AppColors.primaryLight,
       child: Wrap(
         alignment: WrapAlignment.spaceBetween,
@@ -108,8 +113,8 @@ class _UtilityBar extends StatelessWidget {
         spacing: 12,
         runSpacing: 4,
         children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
+          Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
             children: [
               const Icon(Icons.phone, size: 14, color: AppColors.primary),
               const SizedBox(width: 4),
@@ -119,9 +124,12 @@ class _UtilityBar extends StatelessWidget {
               ),
             ],
           ),
-          Text(
-            'Adelaide Hills • Nationwide Delivery',
-            style: GoogleFonts.manrope(fontSize: 11, fontWeight: FontWeight.w600),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              'Adelaide Hills • Nationwide Delivery',
+              style: GoogleFonts.manrope(fontSize: 11, fontWeight: FontWeight.w600),
+            ),
           ),
         ],
       ),
@@ -135,71 +143,95 @@ class _HomeHeader extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final cartCount = ref.watch(cartCountProvider);
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          // Logo
-          Flexible(
-            child: Image.asset(
-              'assets/pharmacist_advice.png',
-              height: 40,
-              fit: BoxFit.contain,
-            ),
-          ),
-          Row(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isNarrow = constraints.maxWidth < 300;
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(20, 4, 12, 8),
+          child: Row(
             children: [
-              IconButton(
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => const SearchScreen()));
-                },
-                icon: const Icon(Icons.search),
-              ),
-              const SizedBox(width: 4),
-              // Cart icon with badge
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (_) => const CartScreen()));
-                    },
-                    icon: const Icon(Icons.shopping_cart_outlined),
+              // Logo
+              Expanded(
+                flex: 3,
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Image.asset(
+                    'assets/pharmacist_advice.png',
+                    height: isNarrow ? 28 : 36,
+                    fit: BoxFit.contain,
                   ),
-                  if (cartCount > 0)
-                    Positioned(
-                      top: 6,
-                      right: 6,
-                      child: Container(
-                        width: 16,
-                        height: 16,
-                        decoration: const BoxDecoration(
-                          color: AppColors.accent,
-                          shape: BoxShape.circle,
-                        ),
-                        alignment: Alignment.center,
-                        child: Text(
-                          cartCount > 9 ? '9+' : '$cartCount',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 9,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                ],
+                ),
               ),
-              const SizedBox(width: 4),
-              IconButton(
-                onPressed: () => Scaffold.of(context).openDrawer(),
-                icon: const Icon(Icons.menu),
+              const SizedBox(width: 8),
+              Expanded(
+                flex: 4,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerRight,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                      constraints: isNarrow ? const BoxConstraints(maxWidth: 32) : const BoxConstraints(maxWidth: 40),
+                      padding: isNarrow ? EdgeInsets.zero : null,
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => const SearchScreen()));
+                      },
+                      icon: Icon(Icons.search, size: isNarrow ? 18 : 22),
+                    ),
+                    if (!isNarrow) const SizedBox(width: 4),
+                    // Cart icon with badge
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        IconButton(
+                          constraints: isNarrow ? const BoxConstraints(maxWidth: 32) : const BoxConstraints(maxWidth: 40),
+                          padding: isNarrow ? EdgeInsets.zero : null,
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => const CartScreen()));
+                          },
+                          icon: Icon(Icons.shopping_cart_outlined, size: isNarrow ? 18 : 22),
+                        ),
+                        if (cartCount > 0)
+                          Positioned(
+                            top: isNarrow ? 4 : 6,
+                            right: isNarrow ? 2 : 6,
+                            child: Container(
+                              width: 14,
+                              height: 14,
+                              decoration: const BoxDecoration(
+                                color: AppColors.accent,
+                                shape: BoxShape.circle,
+                              ),
+                              alignment: Alignment.center,
+                              child: Text(
+                                cartCount > 9 ? '9+' : '$cartCount',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 8,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                    if (!isNarrow) const SizedBox(width: 4),
+                    IconButton(
+                      constraints: isNarrow ? const BoxConstraints(maxWidth: 32) : const BoxConstraints(maxWidth: 40),
+                      padding: isNarrow ? EdgeInsets.zero : null,
+                      onPressed: () => Scaffold.of(context).openDrawer(),
+                      icon: Icon(Icons.menu, size: isNarrow ? 18 : 22),
+                    ),
+                  ],
+                ),
+                ),
               ),
             ],
           ),
-        ],
-      ),
+        );
+      }
     );
   }
 }
@@ -229,76 +261,83 @@ class _HeroBanner extends ConsumerWidget {
               color: AppColors.secondary.withValues(alpha: 0.7),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Your trusted Kersbrook pharmacy—now delivering prescriptions across Australia',
-                  style: GoogleFonts.manrope(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w800,
-                    color: Colors.white,
-                    height: 1.2,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  'Order prescriptions, shop pharmacy essentials, book vaccinations and access personal pharmacist support.',
-                  style: GoogleFonts.manrope(
-                    fontSize: 14,
-                    color: Colors.white.withValues(alpha: 0.9),
-                    height: 1.5,
-                  ),
-                ),
-                const SizedBox(height: 24),
-                Row(
+          LayoutBuilder(
+            builder: (context, constraints) {
+              return Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          ref.read(bottomNavIndexProvider.notifier).state = 2;
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.accent,
-                          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
-                        ),
-                        child: const FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Text(
-                            'Order Prescription',
-                            maxLines: 1,
-                            style: TextStyle(fontSize: 13),
-                          ),
-                        ),
+                    Text(
+                      'Your trusted Kersbrook pharmacy—now delivering prescriptions across Australia',
+                      style: GoogleFonts.manrope(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.white,
+                        height: 1.2,
                       ),
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          ref.read(bottomNavIndexProvider.notifier).state = 1;
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: AppColors.primary,
-                          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
-                        ),
-                        child: const FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Text(
-                            'Shop Online',
-                            maxLines: 1,
-                            style: TextStyle(fontSize: 13),
+                    const SizedBox(height: 12),
+                    Text(
+                      'Order prescriptions, shop pharmacy essentials, book vaccinations and access personal pharmacist support.',
+                      style: GoogleFonts.manrope(
+                        fontSize: 14,
+                        color: Colors.white.withValues(alpha: 0.9),
+                        height: 1.5,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    Wrap(
+                      spacing: 12,
+                      runSpacing: 12,
+                      children: [
+                        SizedBox(
+                          width: constraints.maxWidth < 300 ? double.infinity : (constraints.maxWidth - 48 - 12) / 2,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              ref.read(bottomNavIndexProvider.notifier).state = 2;
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.accent,
+                              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+                            ),
+                            child: const FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                'Order Prescription',
+                                maxLines: 1,
+                                style: TextStyle(fontSize: 13),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                        SizedBox(
+                          width: constraints.maxWidth < 300 ? double.infinity : (constraints.maxWidth - 48 - 12) / 2,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              ref.read(bottomNavIndexProvider.notifier).state = 1;
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              foregroundColor: AppColors.primary,
+                              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+                            ),
+                            child: const FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                'Shop Online',
+                                maxLines: 1,
+                                style: TextStyle(fontSize: 13),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
+              );
+            }
           ),
         ],
       ),
@@ -313,63 +352,70 @@ class _PrimaryServiceCards extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: GridView.count(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        crossAxisCount: 2,
-        mainAxisSpacing: 12,
-        crossAxisSpacing: 12,
-        childAspectRatio: 0.82,
-        children: [
-          _ServiceCard(
-            title: 'Order prescriptions',
-            description: 'Send an eScript, order repeats or manage regular medicines.',
-            icon: Icons.medication,
-            buttonText: 'Order Now',
-            color: const Color(0xFFE3F2FD),
-            iconColor: Colors.blue,
-            onTap: () {
-              ref.read(bottomNavIndexProvider.notifier).state = 2;
-            },
-          ),
-          _ServiceCard(
-            title: 'Free Webster-pak®',
-            description: 'Regular medicines professionally organised by day and time.',
-            icon: Icons.calendar_view_month,
-            buttonText: 'Register Now',
-            color: const Color(0xFFFFF3E0),
-            iconColor: Colors.orange,
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const WebsterPakScreen()),
-              );
-            },
-          ),
-          _ServiceCard(
-            title: 'Shop online',
-            description: 'Browse eligible pharmacy, health, beauty and home-care products.',
-            icon: Icons.shopping_bag,
-            buttonText: 'Shop Now',
-            color: const Color(0xFFF1F8E9),
-            iconColor: Colors.green,
-            onTap: () {
-              ref.read(bottomNavIndexProvider.notifier).state = 1;
-            },
-          ),
-          _ServiceCard(
-            title: 'Vaccinations',
-            description: 'View available pharmacist vaccination services and book online.',
-            icon: Icons.vaccines,
-            buttonText: 'Book Now',
-            color: const Color(0xFFF3E5F5),
-            iconColor: Colors.purple,
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const VaccinationScreen()),
-              );
-            },
-          ),
-        ],
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final isNarrow = constraints.maxWidth < 300;
+          return GridView(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: isNarrow ? 1 : (constraints.maxWidth > 600 ? 4 : 2),
+              mainAxisSpacing: 12,
+              crossAxisSpacing: 12,
+              mainAxisExtent: 180,
+            ),
+            children: [
+              _ServiceCard(
+                title: 'Order prescriptions',
+                description: 'Send an eScript, order repeats or manage regular medicines.',
+                icon: Icons.medication,
+                buttonText: 'Order Now',
+                color: const Color(0xFFE3F2FD),
+                iconColor: Colors.blue,
+                onTap: () {
+                  ref.read(bottomNavIndexProvider.notifier).state = 2;
+                },
+              ),
+              _ServiceCard(
+                title: 'Free Webster-pak®',
+                description: 'Regular medicines professionally organised by day and time.',
+                icon: Icons.calendar_view_month,
+                buttonText: 'Register Now',
+                color: const Color(0xFFFFF3E0),
+                iconColor: Colors.orange,
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const WebsterPakScreen()),
+                  );
+                },
+              ),
+              _ServiceCard(
+                title: 'Shop online',
+                description: 'Browse eligible pharmacy, health, beauty and home-care products.',
+                icon: Icons.shopping_bag,
+                buttonText: 'Shop Now',
+                color: const Color(0xFFF1F8E9),
+                iconColor: Colors.green,
+                onTap: () {
+                  ref.read(bottomNavIndexProvider.notifier).state = 1;
+                },
+              ),
+              _ServiceCard(
+                title: 'Vaccinations',
+                description: 'View available pharmacist vaccination services and book online.',
+                icon: Icons.vaccines,
+                buttonText: 'Book Now',
+                color: const Color(0xFFF3E5F5),
+                iconColor: Colors.purple,
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const VaccinationScreen()),
+                  );
+                },
+              ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -411,39 +457,50 @@ class _ServiceCard extends StatelessWidget {
             ),
             child: Icon(icon, color: iconColor, size: 24),
           ),
-          const SizedBox(height: 12),
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style: GoogleFonts.manrope(
-              fontSize: 14,
-              fontWeight: FontWeight.w800,
-              color: AppColors.textDark,
+          const SizedBox(height: 8),
+          SizedBox(
+            height: 36,
+            child: Center(
+              child: Text(
+                title,
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: GoogleFonts.manrope(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.textDark,
+                ),
+              ),
             ),
           ),
-          const SizedBox(height: 6),
           SizedBox(
-            height: 45,
-            child: Text(
-              description,
-              textAlign: TextAlign.center,
-              style: GoogleFonts.manrope(
-                fontSize: 10,
-                color: AppColors.textLight,
-                height: 1.4,
+            height: 40,
+            child: Center(
+              child: Text(
+                description,
+                textAlign: TextAlign.center,
+                style: GoogleFonts.manrope(
+                  fontSize: 10,
+                  color: AppColors.textLight,
+                  height: 1.2,
+                ),
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
               ),
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
             ),
           ),
           const SizedBox(height: 4),
-          Text(
-            buttonText,
-            textAlign: TextAlign.center,
-            style: GoogleFonts.manrope(
-              fontSize: 11,
-              fontWeight: FontWeight.w700,
-              color: AppColors.primary,
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              buttonText,
+              textAlign: TextAlign.center,
+              style: GoogleFonts.manrope(
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                color: AppColors.primary,
+              ),
             ),
           ),
         ],
@@ -679,51 +736,68 @@ class _MedAdvisorPromo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.all(20),
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF0F7FF),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: Colors.blue.withValues(alpha: 0.2)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isNarrow = constraints.maxWidth < 320;
+        return Container(
+          margin: EdgeInsets.all(isNarrow ? 12 : 20),
+          padding: EdgeInsets.all(isNarrow ? 16 : 24),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF0F7FF),
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(color: Colors.blue.withValues(alpha: 0.2)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(Icons.app_shortcut, color: Colors.blue, size: 32),
-              const SizedBox(width: 12),
-              Text(
-                'Manage with MedAdvisor',
-                style: GoogleFonts.manrope(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w800,
-                  color: const Color(0xFF004080),
-                ),
+              Row(
+                children: [
+                  Icon(Icons.app_shortcut, color: Colors.blue, size: isNarrow ? 24 : 32),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Manage with MedAdvisor',
+                        style: GoogleFonts.manrope(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w800,
+                          color: const Color(0xFF004080),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              _benefitRow('Order prescriptions and repeats'),
+              _benefitRow('Receive medicine reminders'),
+              _benefitRow('Select collection or delivery'),
+              _benefitRow('Manage medicines for family members'),
+              const SizedBox(height: 20),
+              Wrap(
+                spacing: 12,
+                runSpacing: 12,
+                children: [
+                  SizedBox(
+                    width: isNarrow ? double.infinity : null,
+                    child: ElevatedButton(onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (_) => const MedAdvisorInfoScreen()));
+                    }, child: const Text('Log In')),
+                  ),
+                  SizedBox(
+                    width: isNarrow ? double.infinity : null,
+                    child: TextButton(onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (_) => const MedAdvisorInfoScreen()));
+                    }, child: const Text('How It Works')),
+                  ),
+                ],
               ),
             ],
           ),
-          const SizedBox(height: 16),
-          _benefitRow('Order prescriptions and repeats'),
-          _benefitRow('Receive medicine reminders'),
-          _benefitRow('Select collection or delivery'),
-          _benefitRow('Manage medicines for family members'),
-          const SizedBox(height: 20),
-          Wrap(
-            spacing: 12,
-            runSpacing: 12,
-            children: [
-              ElevatedButton(onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (_) => const MedAdvisorInfoScreen()));
-              }, child: const Text('Log In')),
-              TextButton(onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (_) => const MedAdvisorInfoScreen()));
-              }, child: const Text('How It Works')),
-            ],
-          ),
-        ],
-      ),
+        );
+      }
     );
   }
 
@@ -732,9 +806,18 @@ class _MedAdvisorPromo extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
         children: [
-          const Icon(Icons.check_circle, color: Colors.green, size: 16),
+          const Icon(Icons.check_circle, color: Colors.green, size: 14),
           const SizedBox(width: 8),
-          Expanded(child: Text(text, style: GoogleFonts.manrope(fontSize: 13))),
+          Expanded(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                text, 
+                style: GoogleFonts.manrope(fontSize: 12)
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -859,7 +942,12 @@ class _PromoSection extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(buttonText, style: const TextStyle(fontWeight: FontWeight.bold)),
+                Flexible(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(buttonText, style: const TextStyle(fontWeight: FontWeight.bold)),
+                  ),
+                ),
                 const Icon(Icons.arrow_forward, size: 16),
               ],
             ),
@@ -877,8 +965,11 @@ class _FeaturedProductsHeader extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Wrap(
+        alignment: WrapAlignment.spaceBetween,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        spacing: 8,
+        runSpacing: 4,
         children: [
           Text(
             'Selected Pharmacy Essentials',
@@ -934,6 +1025,7 @@ class _ProductCard extends StatelessWidget {
             padding: const EdgeInsets.all(12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
                   product.name,
@@ -942,12 +1034,15 @@ class _ProductCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  '${product.price.toStringAsFixed(2)} AUD',
-                  style: GoogleFonts.manrope(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.primary,
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    '${product.price.toStringAsFixed(2)} AUD',
+                    style: GoogleFonts.manrope(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.primary,
+                    ),
                   ),
                 ),
               ],
@@ -1139,10 +1234,12 @@ class _TrustStrip extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 24),
-      padding: const EdgeInsets.symmetric(vertical: 20),
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
       color: Colors.white,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      child: Wrap(
+        alignment: WrapAlignment.spaceEvenly,
+        spacing: 12,
+        runSpacing: 16,
         children: [
           _TrustItem(icon: Icons.verified_user, label: 'Registered\nPharmacy'),
           _TrustItem(icon: Icons.local_shipping, label: 'Nationwide\nDelivery'),
@@ -1187,13 +1284,16 @@ class _AppFooter extends StatelessWidget {
         children: [
           const Icon(Icons.local_pharmacy, color: Colors.white, size: 40),
           const SizedBox(height: 16),
-          Text(
-            'KERSBROOK PHARMACY',
-            style: GoogleFonts.manrope(
-              color: Colors.white,
-              fontWeight: FontWeight.w900,
-              fontSize: 18,
-              letterSpacing: 1.0,
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              'KERSBROOK PHARMACY',
+              style: GoogleFonts.manrope(
+                color: Colors.white,
+                fontWeight: FontWeight.w900,
+                fontSize: 18,
+                letterSpacing: 1.0,
+              ),
             ),
           ),
           const SizedBox(height: 8),

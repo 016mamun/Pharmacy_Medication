@@ -31,7 +31,7 @@ class ShopScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Shop Pharmacy Essentials'),
+        title: const Text('Shop'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
           onPressed: () {
@@ -44,33 +44,35 @@ class ShopScreen extends ConsumerWidget {
         ),
         actions: [
           IconButton(
+            constraints: const BoxConstraints(maxWidth: 40),
             onPressed: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => const SearchScreen()),
               );
             },
-            icon: const Icon(Icons.search),
+            icon: const Icon(Icons.search, size: 22),
           ),
           Stack(
             alignment: Alignment.center,
             children: [
               IconButton(
+                constraints: const BoxConstraints(maxWidth: 40),
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (_) => const CartScreen()),
                   );
                 },
-                icon: const Icon(Icons.shopping_cart_outlined),
+                icon: const Icon(Icons.shopping_cart_outlined, size: 22),
               ),
               if (cartCount > 0)
                 Positioned(
-                  top: 6,
-                  right: 6,
+                  top: 8,
+                  right: 4,
                   child: Container(
-                    width: 16,
-                    height: 16,
+                    width: 14,
+                    height: 14,
                     decoration: const BoxDecoration(
                       color: AppColors.accent,
                       shape: BoxShape.circle,
@@ -80,7 +82,7 @@ class ShopScreen extends ConsumerWidget {
                       cartCount > 9 ? '9+' : '$cartCount',
                       style: const TextStyle(
                         color: Colors.white,
-                        fontSize: 9,
+                        fontSize: 8,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -90,46 +92,51 @@ class ShopScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          _CategoryBar(),
-          if (filteredProducts.isEmpty)
-            Expanded(
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.category_outlined,
-                        size: 64, color: AppColors.grey.withValues(alpha: 0.4)),
-                    const SizedBox(height: 16),
-                    Text(
-                      'No products in this category yet',
-                      style: GoogleFonts.manrope(
-                        fontSize: 16,
-                        color: AppColors.textLight,
-                      ),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final isNarrow = constraints.maxWidth < 300;
+          return Column(
+            children: [
+              _CategoryBar(),
+              if (filteredProducts.isEmpty)
+                Expanded(
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.category_outlined,
+                            size: 64, color: AppColors.grey.withValues(alpha: 0.4)),
+                        const SizedBox(height: 16),
+                        Text(
+                          'No products yet',
+                          style: GoogleFonts.manrope(
+                            fontSize: 16,
+                            color: AppColors.textLight,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
+                )
+              else
+                Expanded(
+                  child: GridView.builder(
+                    padding: const EdgeInsets.all(20),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: isNarrow ? 1 : 2,
+                      childAspectRatio: isNarrow ? 1.4 : 0.72,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                    ),
+                    itemCount: filteredProducts.length,
+                    itemBuilder: (context, index) {
+                      return _ProductItem(product: filteredProducts[index]);
+                    },
+                  ),
                 ),
-              ),
-            )
-          else
-            Expanded(
-              child: GridView.builder(
-                padding: const EdgeInsets.all(20),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.72,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                ),
-                itemCount: filteredProducts.length,
-                itemBuilder: (context, index) {
-                  return _ProductItem(product: filteredProducts[index]);
-                },
-              ),
-            ),
-        ],
+            ],
+          );
+        }
       ),
     );
   }

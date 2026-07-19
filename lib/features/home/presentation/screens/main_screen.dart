@@ -211,24 +211,34 @@ class _BottomBarItem extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            color: isActive ? AppColors.primary : AppColors.textLight,
-            size: 24,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: GoogleFonts.manrope(
-              fontSize: 10,
-              fontWeight: isActive ? FontWeight.w800 : FontWeight.w600,
-              color: isActive ? AppColors.primary : AppColors.textLight,
-            ),
-          ),
-        ],
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final showLabel = constraints.maxWidth > 50;
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                icon,
+                color: isActive ? AppColors.primary : AppColors.textLight,
+                size: showLabel ? 24 : 20,
+              ),
+              if (showLabel) ...[
+                const SizedBox(height: 4),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    label,
+                    style: GoogleFonts.manrope(
+                      fontSize: 10,
+                      fontWeight: isActive ? FontWeight.w800 : FontWeight.w600,
+                      color: isActive ? AppColors.primary : AppColors.textLight,
+                    ),
+                  ),
+                ),
+              ],
+            ],
+          );
+        }
       ),
     );
   }

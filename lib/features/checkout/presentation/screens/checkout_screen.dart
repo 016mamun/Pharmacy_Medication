@@ -58,7 +58,10 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
         controlsBuilder: (context, details) {
           return Padding(
             padding: const EdgeInsets.only(top: 16),
-            child: Row(
+            child: Wrap(
+              spacing: 12,
+              runSpacing: 8,
+              crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 ElevatedButton(
                   onPressed: details.onStepContinue,
@@ -67,13 +70,11 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                     style: GoogleFonts.manrope(fontWeight: FontWeight.w700),
                   ),
                 ),
-                if (_currentStep > 0) ...[
-                  const SizedBox(width: 12),
+                if (_currentStep > 0)
                   TextButton(
                     onPressed: details.onStepCancel,
                     child: const Text('Back'),
                   ),
-                ],
               ],
             ),
           );
@@ -298,14 +299,13 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                 ),
                 const SizedBox(height: 20),
                 // Payment method icons row
-                Row(
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
                   children: [
                     _buildPaymentBadge('Visa'),
-                    const SizedBox(width: 8),
                     _buildPaymentBadge('Mastercard'),
-                    const SizedBox(width: 8),
                     _buildPaymentBadge('PayPal'),
-                    const SizedBox(width: 8),
                     _buildPaymentBadge('AfterPay'),
                   ],
                 ),
@@ -373,7 +373,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
         child: Row(
           children: [
             Icon(icon, color: isSelected ? AppColors.primary : AppColors.grey, size: 28),
-            const SizedBox(width: 16),
+            const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -391,15 +391,16 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                     subtitle,
                     style: GoogleFonts.manrope(fontSize: 11, color: AppColors.textLight, height: 1.4),
                   ),
+                  const SizedBox(height: 4),
+                  Text(
+                    price,
+                    style: GoogleFonts.manrope(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 13,
+                      color: isSelected ? AppColors.primary : AppColors.textDark,
+                    ),
+                  ),
                 ],
-              ),
-            ),
-            Text(
-              price,
-              style: GoogleFonts.manrope(
-                fontWeight: FontWeight.w800,
-                fontSize: 13,
-                color: isSelected ? AppColors.primary : AppColors.textDark,
               ),
             ),
             const SizedBox(width: 8),

@@ -358,20 +358,28 @@ class _SummaryRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          label,
-          style: GoogleFonts.manrope(
-            fontSize: isBold ? 16 : 14,
-            fontWeight: isBold ? FontWeight.w700 : FontWeight.w400,
-            color: isBold ? AppColors.textDark : AppColors.grey,
+        Expanded(
+          child: Text(
+            label,
+            style: GoogleFonts.manrope(
+              fontSize: isBold ? 16 : 14,
+              fontWeight: isBold ? FontWeight.w700 : FontWeight.w400,
+              color: isBold ? AppColors.textDark : AppColors.grey,
+            ),
           ),
         ),
-        Text(
-          value,
-          style: GoogleFonts.manrope(
-            fontSize: isBold ? 16 : 14,
-            fontWeight: isBold ? FontWeight.w800 : FontWeight.w600,
-            color: AppColors.textDark,
+        const SizedBox(width: 8),
+        Flexible(
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              value,
+              style: GoogleFonts.manrope(
+                fontSize: isBold ? 16 : 14,
+                fontWeight: isBold ? FontWeight.w800 : FontWeight.w600,
+                color: AppColors.textDark,
+              ),
+            ),
           ),
         ),
       ],
