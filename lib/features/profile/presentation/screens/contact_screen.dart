@@ -152,37 +152,80 @@ class _ContactInfoItem extends StatelessWidget {
   }
 }
 
-class _EnquiryForm extends StatelessWidget {
+class _EnquiryForm extends StatefulWidget {
   const _EnquiryForm();
+
+  @override
+  State<_EnquiryForm> createState() => _EnquiryFormState();
+}
+
+class _EnquiryFormState extends State<_EnquiryForm> {
+  String? _selectedType;
+  final List<String> _enquiryTypes = [
+    'General Enquiry',
+    'Prescription Enquiry',
+    'Delivery Enquiry',
+    'Webster-pak Enquiry',
+    'Vaccination Enquiry',
+    'Feedback & Complaints',
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        TextField(
-          decoration: const InputDecoration(labelText: 'Name'),
+        const TextField(
+          decoration: InputDecoration(labelText: 'Name'),
         ),
         const SizedBox(height: 16),
-        TextField(
-          decoration: const InputDecoration(labelText: 'Email'),
+        const TextField(
+          decoration: InputDecoration(labelText: 'Email'),
         ),
         const SizedBox(height: 16),
-        TextField(
-          decoration: const InputDecoration(
-            labelText: 'Enquiry Type',
-            suffixIcon: Icon(Icons.arrow_drop_down),
+        DropdownButtonFormField<String>(
+          value: _selectedType,
+          hint: Text(
+            'Select Enquiry Type',
+            style: GoogleFonts.manrope(
+              fontSize: 14,
+              color: AppColors.textLight,
+            ),
           ),
+          decoration: const InputDecoration(
+            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          ),
+          items: _enquiryTypes.map((String type) {
+            return DropdownMenuItem<String>(
+              value: type,
+              child: Text(
+                type,
+                style: GoogleFonts.manrope(fontSize: 14),
+              ),
+            );
+          }).toList(),
+          onChanged: (String? newValue) {
+            setState(() {
+              _selectedType = newValue;
+            });
+          },
+          icon: const Icon(Icons.arrow_drop_down, color: AppColors.textLight),
+          dropdownColor: Colors.white,
+          borderRadius: BorderRadius.circular(16),
         ),
         const SizedBox(height: 16),
-        TextField(
+        const TextField(
           maxLines: 4,
-          decoration: const InputDecoration(labelText: 'Message'),
+          decoration: InputDecoration(labelText: 'Message'),
         ),
         const SizedBox(height: 24),
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Thank you! Your enquiry has been sent.')),
+              );
+            },
             child: const Text('Send Enquiry'),
           ),
         ),
