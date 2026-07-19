@@ -105,7 +105,7 @@ class _VaccinationBookingScreenState extends State<VaccinationBookingScreen> {
             title: Text('Select Service', style: GoogleFonts.manrope(fontWeight: FontWeight.bold)),
             content: DropdownButtonFormField<String>(
               isExpanded: true,
-              value: _selectedService,
+              initialValue: _selectedService,
               items: ['General Vaccination', 'Influenza (Flu)', 'Whooping Cough (dTpa)', 'Travel Vaccination', 'Other']
                   .map((s) => DropdownMenuItem(value: s, child: Text(s)))
                   .toList(),

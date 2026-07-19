@@ -155,7 +155,7 @@ class _WebsterPakFormState extends State<_WebsterPakForm> {
           ),
           const SizedBox(height: 8),
           DropdownButtonFormField<String>(
-            value: _deliveryFrequency,
+            initialValue: _deliveryFrequency,
             items: ['Weekly', 'Fortnightly', 'Monthly']
                 .map((f) => DropdownMenuItem(value: f, child: Text(f)))
                 .toList(),

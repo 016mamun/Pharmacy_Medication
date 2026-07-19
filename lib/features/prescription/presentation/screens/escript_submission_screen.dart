@@ -47,13 +47,17 @@ class _EScriptSubmissionScreenState extends State<EScriptSubmissionScreen> {
                 style: GoogleFonts.manrope(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark),
               ),
               const SizedBox(height: 12),
-              Wrap(
-                spacing: 20,
-                runSpacing: 8,
-                children: [
-                  _radioOption('Delivery'),
-                  _radioOption('In-person Collection'),
-                ],
+              RadioGroup<String>(
+                groupValue: _collectionMethod,
+                onChanged: (val) => setState(() => _collectionMethod = val!),
+                child: Wrap(
+                  spacing: 20,
+                  runSpacing: 8,
+                  children: [
+                    _radioOption('Delivery'),
+                    _radioOption('In-person Collection'),
+                  ],
+                ),
               ),
               if (_collectionMethod == 'Delivery') ...[
                 const SizedBox(height: 16),
@@ -168,9 +172,7 @@ class _EScriptSubmissionScreenState extends State<EScriptSubmissionScreen> {
       children: [
         Radio<String>(
           value: value,
-          groupValue: _collectionMethod,
           activeColor: AppColors.primary,
-          onChanged: (val) => setState(() => _collectionMethod = val!),
         ),
         Text(value, style: GoogleFonts.manrope(fontSize: 14, fontWeight: FontWeight.w600)),
       ],
