@@ -515,46 +515,88 @@ class _NationwideServiceSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 24),
-      padding: const EdgeInsets.all(24),
-      color: AppColors.primary,
+      margin: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
+      padding: const EdgeInsets.all(28),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [AppColors.primary, Color(0xFF0D47A1)], // Deep blue gradient
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary.withValues(alpha: 0.3),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Prescription delivery beyond the Adelaide Hills',
-            style: GoogleFonts.manrope(
-              fontSize: 18,
-              fontWeight: FontWeight.w800,
-              color: Colors.white,
-            ),
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: const Icon(Icons.local_shipping_outlined, color: Colors.white, size: 28),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Text(
+                  'Prescription delivery beyond the Adelaide Hills',
+                  style: GoogleFonts.manrope(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w800,
+                    color: Colors.white,
+                    height: 1.3,
+                  ),
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
           Text(
             'Kersbrook Pharmacy supports eligible patients throughout Australia with convenient prescription ordering and delivery.',
             style: GoogleFonts.manrope(
               fontSize: 13,
-              color: Colors.white.withValues(alpha: 0.9),
+              color: Colors.white.withValues(alpha: 0.85),
               height: 1.5,
             ),
           ),
-          const SizedBox(height: 20),
-          _stepRow('1', 'Send or order your prescription'),
-          _stepRow('2', 'A pharmacist reviews and confirms supply'),
-          _stepRow('3', 'Select an available delivery option'),
-          _stepRow('4', 'Receive tracking information'),
           const SizedBox(height: 24),
+          _stepRow('1', 'Send or order your prescription', Icons.receipt_long),
+          _stepRow('2', 'A pharmacist reviews and confirms supply', Icons.fact_check_outlined),
+          _stepRow('3', 'Select an available delivery option', Icons.local_shipping_outlined),
+          _stepRow('4', 'Receive tracking information', Icons.location_on_outlined),
+          const SizedBox(height: 32),
           Wrap(
             spacing: 12,
             runSpacing: 12,
             children: [
-              _ActionButton(text: 'Send eScript', onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (_) => const EScriptSubmissionScreen()));
-              }),
-              _ActionButton(text: 'Use MedAdvisor', onPressed: () {
+              ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const EScriptSubmissionScreen()));
+                },
+                icon: const Icon(Icons.send, size: 16, color: AppColors.primary),
+                label: const Text('Send eScript'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: AppColors.primary,
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  elevation: 0,
+                  textStyle: GoogleFonts.manrope(fontSize: 13, fontWeight: FontWeight.bold),
+                ),
+              ),
+              _ActionButton(text: 'Use MedAdvisor', icon: Icons.phone_android, onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (_) => const MedAdvisorInfoScreen()));
               }),
-              _ActionButton(text: 'Ask a Pharmacist', onPressed: () {
+              _ActionButton(text: 'Ask a Pharmacist', icon: Icons.chat_bubble_outline, onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (_) => const PharmacistAdviceFormScreen()));
               }),
             ],
@@ -564,31 +606,32 @@ class _NationwideServiceSection extends StatelessWidget {
     );
   }
 
-  Widget _stepRow(String number, String text) {
+  Widget _stepRow(String number, String text, IconData icon) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.only(bottom: 16),
       child: Row(
         children: [
           Container(
-            width: 24,
-            height: 24,
+            width: 32,
+            height: 32,
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.2),
-              shape: BoxShape.circle,
+              color: Colors.white.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(8),
             ),
             alignment: Alignment.center,
             child: Text(
               number,
-              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
+              style: GoogleFonts.manrope(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 13),
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 16),
           Expanded(
             child: Text(
               text,
-              style: GoogleFonts.manrope(color: Colors.white, fontSize: 13),
+              style: GoogleFonts.manrope(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
             ),
           ),
+          Icon(icon, color: Colors.white.withValues(alpha: 0.4), size: 20),
         ],
       ),
     );
@@ -597,20 +640,24 @@ class _NationwideServiceSection extends StatelessWidget {
 
 class _ActionButton extends StatelessWidget {
   final String text;
+  final IconData icon;
   final VoidCallback onPressed;
 
-  const _ActionButton({required this.text, required this.onPressed});
+  const _ActionButton({required this.text, required this.icon, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton(
+    return OutlinedButton.icon(
       onPressed: onPressed,
+      icon: Icon(icon, size: 16),
+      label: Text(text),
       style: OutlinedButton.styleFrom(
         foregroundColor: Colors.white,
-        side: const BorderSide(color: Colors.white),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        side: BorderSide(color: Colors.white.withValues(alpha: 0.5)),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        textStyle: GoogleFonts.manrope(fontSize: 13, fontWeight: FontWeight.w600),
       ),
-      child: Text(text, style: const TextStyle(fontSize: 12)),
     );
   }
 }
