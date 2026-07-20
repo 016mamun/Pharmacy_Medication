@@ -182,40 +182,43 @@ class _HomeHeader extends ConsumerWidget {
                     ),
                     if (!isNarrow) const SizedBox(width: 4),
                     // Cart icon with badge
-                    Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        IconButton(
-                          constraints: isNarrow ? const BoxConstraints(maxWidth: 32) : const BoxConstraints(maxWidth: 40),
-                          padding: isNarrow ? EdgeInsets.zero : null,
-                          onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (_) => const CartScreen()));
-                          },
-                          icon: Icon(Icons.shopping_cart_outlined, size: isNarrow ? 18 : 22),
-                        ),
-                        if (cartCount > 0)
-                          Positioned(
-                            top: isNarrow ? 4 : 6,
-                            right: isNarrow ? 2 : 6,
-                            child: Container(
-                              width: 14,
-                              height: 14,
-                              decoration: const BoxDecoration(
-                                color: AppColors.accent,
-                                shape: BoxShape.circle,
-                              ),
-                              alignment: Alignment.center,
-                              child: Text(
-                                cartCount > 9 ? '9+' : '$cartCount',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 8,
-                                  fontWeight: FontWeight.bold,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => const CartScreen()));
+                      },
+                      behavior: HitTestBehavior.opaque,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: Stack(
+                          alignment: Alignment.center,
+                          clipBehavior: Clip.none,
+                          children: [
+                            Icon(Icons.shopping_cart_outlined, size: isNarrow ? 20 : 24),
+                            if (cartCount > 0)
+                              Positioned(
+                                top: -4,
+                                right: -4,
+                                child: Container(
+                                  width: 16,
+                                  height: 16,
+                                  decoration: const BoxDecoration(
+                                    color: AppColors.accent,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    cartCount > 9 ? '9+' : '$cartCount',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 8,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                      ],
+                          ],
+                        ),
+                      ),
                     ),
                     if (!isNarrow) const SizedBox(width: 4),
                     IconButton(
