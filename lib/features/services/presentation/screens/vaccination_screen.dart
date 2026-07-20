@@ -181,25 +181,41 @@ class VaccinationScreen extends ConsumerWidget {
   }
 
   Widget _stepItem(String number, String text) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.1)),
+      ),
       child: Row(
         children: [
           Container(
-            width: 28,
-            height: 28,
-            decoration: BoxDecoration(
-              color: AppColors.primaryLight,
+            width: 24,
+            height: 24,
+            decoration: const BoxDecoration(
+              color: AppColors.primary,
               shape: BoxShape.circle,
             ),
             alignment: Alignment.center,
             child: Text(
               number,
-              style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold),
+              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
             ),
           ),
-          const SizedBox(width: 12),
-          Text(text, style: GoogleFonts.manrope(fontSize: 14)),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Text(
+              text,
+              style: GoogleFonts.manrope(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: AppColors.textDark,
+              ),
+            ),
+          ),
+          const Icon(Icons.check_circle_outline, color: AppColors.primary, size: 18),
         ],
       ),
     );
