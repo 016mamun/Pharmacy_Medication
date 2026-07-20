@@ -15,6 +15,7 @@ import 'package:pharmacy_medication/features/about/presentation/screens/about_sc
 import 'package:pharmacy_medication/features/about/presentation/screens/delivery_info_screen.dart';
 import 'package:pharmacy_medication/features/about/presentation/screens/legal_pages_screen.dart';
 import 'package:pharmacy_medication/features/prescription/presentation/screens/pharmacist_advice_form_screen.dart';
+import 'package:pharmacy_medication/features/shop_selection/presentation/screens/shop_selection_screen.dart';
 
 class MainScreen extends ConsumerWidget {
   const MainScreen({super.key});
@@ -94,6 +95,13 @@ class _AppDrawer extends StatelessWidget {
           _drawerItem(context, Icons.chat_bubble_outline, 'Ask a Pharmacist', const PharmacistAdviceFormScreen()),
           _drawerItem(context, Icons.local_shipping_outlined, 'Delivery Information', const DeliveryInfoScreen()),
           _drawerItem(context, Icons.gavel_outlined, 'Legal & Policies', const LegalPagesScreen()),
+          _drawerItem(
+            context,
+            Icons.store_rounded,
+            'Switch Store',
+            const ShopSelectionScreen(),
+            isReplacement: true,
+          ),
           const Spacer(),
           Padding(
             padding: const EdgeInsets.all(20),
@@ -107,14 +115,18 @@ class _AppDrawer extends StatelessWidget {
     );
   }
 
-  Widget _drawerItem(BuildContext context, IconData icon, String title, Widget? screen) {
+  Widget _drawerItem(BuildContext context, IconData icon, String title, Widget? screen, {bool isReplacement = false}) {
     return ListTile(
       leading: Icon(icon, color: AppColors.primary),
       title: Text(title, style: GoogleFonts.manrope(fontWeight: FontWeight.w600)),
       onTap: () {
         Navigator.pop(context); // Close drawer
         if (screen != null) {
-          Navigator.push(context, MaterialPageRoute(builder: (_) => screen));
+          if (isReplacement) {
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => screen));
+          } else {
+            Navigator.push(context, MaterialPageRoute(builder: (_) => screen));
+          }
         }
       },
     );
