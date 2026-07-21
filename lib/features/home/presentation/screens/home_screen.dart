@@ -147,19 +147,17 @@ class _HomeHeader extends ConsumerWidget {
       builder: (context, constraints) {
         final isNarrow = constraints.maxWidth < 300;
         return Padding(
-          padding: const EdgeInsets.fromLTRB(20, 4, 12, 8),
+          padding: const EdgeInsets.fromLTRB(20, 8, 12, 8),
           child: Row(
             children: [
-              // Logo
+              // High-resolution Logo
               Expanded(
-                flex: 5, // Given more space for the high-res logo
-                child: Align(
+                flex: 7,
+                child: Image.asset(
+                  'assets/pharmacist_advice.png',
+                  height: isNarrow ? 28 : 40,
+                  fit: BoxFit.contain,
                   alignment: Alignment.centerLeft,
-                  child: Image.asset(
-                    'assets/pharmacist_advice.png',
-                    height: isNarrow ? 30 : 40,
-                    fit: BoxFit.contain,
-                  ),
                 ),
               ),
               const SizedBox(width: 8),
@@ -173,62 +171,62 @@ class _HomeHeader extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       IconButton(
-                      constraints: isNarrow ? const BoxConstraints(maxWidth: 32) : const BoxConstraints(maxWidth: 40),
-                      padding: isNarrow ? EdgeInsets.zero : null,
-                      onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (_) => const SearchScreen()));
-                      },
-                      icon: Icon(Icons.search, size: isNarrow ? 18 : 22),
-                    ),
-                    if (!isNarrow) const SizedBox(width: 4),
-                    // Cart icon with badge
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (_) => const CartScreen()));
-                      },
-                      behavior: HitTestBehavior.opaque,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: Stack(
-                          alignment: Alignment.center,
-                          clipBehavior: Clip.none,
-                          children: [
-                            Icon(Icons.shopping_cart_outlined, size: isNarrow ? 20 : 24),
-                            if (cartCount > 0)
-                              Positioned(
-                                top: -4,
-                                right: -4,
-                                child: Container(
-                                  width: 16,
-                                  height: 16,
-                                  decoration: const BoxDecoration(
-                                    color: AppColors.accent,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    cartCount > 9 ? '9+' : '$cartCount',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 8,
-                                      fontWeight: FontWeight.bold,
+                        constraints: isNarrow ? const BoxConstraints(maxWidth: 32) : const BoxConstraints(maxWidth: 40),
+                        padding: isNarrow ? EdgeInsets.zero : null,
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (_) => const SearchScreen()));
+                        },
+                        icon: Icon(Icons.search, size: isNarrow ? 20 : 24),
+                      ),
+                      const SizedBox(width: 4),
+                      // Cart icon with badge
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (_) => const CartScreen()));
+                        },
+                        behavior: HitTestBehavior.opaque,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: Stack(
+                            alignment: Alignment.center,
+                            clipBehavior: Clip.none,
+                            children: [
+                              Icon(Icons.shopping_cart_outlined, size: isNarrow ? 20 : 24),
+                              if (cartCount > 0)
+                                Positioned(
+                                  top: -4,
+                                  right: -4,
+                                  child: Container(
+                                    width: 16,
+                                    height: 16,
+                                    decoration: const BoxDecoration(
+                                      color: AppColors.accent,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      cartCount > 9 ? '9+' : '$cartCount',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 8,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    if (!isNarrow) const SizedBox(width: 4),
-                    IconButton(
-                      constraints: isNarrow ? const BoxConstraints(maxWidth: 32) : const BoxConstraints(maxWidth: 40),
-                      padding: isNarrow ? EdgeInsets.zero : null,
-                      onPressed: () => Scaffold.of(context).openDrawer(),
-                      icon: Icon(Icons.menu, size: isNarrow ? 18 : 22),
-                    ),
-                  ],
-                ),
+                      const SizedBox(width: 4),
+                      IconButton(
+                        constraints: isNarrow ? const BoxConstraints(maxWidth: 32) : const BoxConstraints(maxWidth: 40),
+                        padding: isNarrow ? EdgeInsets.zero : null,
+                        onPressed: () => Scaffold.of(context).openDrawer(),
+                        icon: Icon(Icons.menu, size: isNarrow ? 20 : 24),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -807,62 +805,76 @@ class _MedAdvisorPromo extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final isNarrow = constraints.maxWidth < 320;
-        return Container(
-          margin: EdgeInsets.all(isNarrow ? 12 : 20),
-          padding: EdgeInsets.all(isNarrow ? 16 : 24),
-          decoration: BoxDecoration(
-            color: const Color(0xFFF0F7FF),
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: Colors.blue.withValues(alpha: 0.2)),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Icon(Icons.app_shortcut, color: Colors.blue, size: isNarrow ? 24 : 32),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      alignment: Alignment.centerLeft,
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          child: Container(
+            padding: EdgeInsets.all(isNarrow ? 20 : 28),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF4F9FF),
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(color: Colors.blue.withValues(alpha: 0.1)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.app_shortcut, color: Colors.blue, size: 32),
+                    const SizedBox(width: 12),
+                    Expanded(
                       child: Text(
                         'Manage with MedAdvisor',
                         style: GoogleFonts.manrope(
-                          fontSize: 16,
+                          fontSize: 18,
                           fontWeight: FontWeight.w800,
                           color: const Color(0xFF004080),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              _benefitRow('Order prescriptions and repeats'),
-              _benefitRow('Receive medicine reminders'),
-              _benefitRow('Select collection or delivery'),
-              _benefitRow('Manage medicines for family members'),
-              const SizedBox(height: 20),
-              Wrap(
-                spacing: 12,
-                runSpacing: 12,
-                children: [
-                  SizedBox(
-                    width: isNarrow ? double.infinity : null,
-                    child: ElevatedButton(onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (_) => const MedAdvisorInfoScreen()));
-                    }, child: const Text('Log In')),
-                  ),
-                  SizedBox(
-                    width: isNarrow ? double.infinity : null,
-                    child: TextButton(onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (_) => const MedAdvisorInfoScreen()));
-                    }, child: const Text('How It Works')),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+                const SizedBox(height: 24),
+                _benefitRow('Order prescriptions and repeats'),
+                _benefitRow('Receive medicine reminders'),
+                _benefitRow('Select collection or delivery'),
+                _benefitRow('Manage medicines for family members'),
+                const SizedBox(height: 32),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (_) => const MedAdvisorInfoScreen()));
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF004080),
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          elevation: 0,
+                        ),
+                        child: const Text('Log In'),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (_) => const MedAdvisorInfoScreen()));
+                        },
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: const Color(0xFF004080),
+                          side: const BorderSide(color: Color(0xFF004080)),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        ),
+                        child: const FittedBox(child: Text('How It Works')),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         );
       }
@@ -871,19 +883,16 @@ class _MedAdvisorPromo extends StatelessWidget {
 
   Widget _benefitRow(String text) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.only(bottom: 10),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          const Icon(Icons.check_circle, color: Colors.green, size: 14),
-          const SizedBox(width: 8),
+          const Icon(Icons.check_circle, color: Colors.green, size: 16),
+          const SizedBox(width: 10),
           Expanded(
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              alignment: Alignment.centerLeft,
-              child: Text(
-                text, 
-                style: GoogleFonts.manrope(fontSize: 12)
-              ),
+            child: Text(
+              text, 
+              style: GoogleFonts.manrope(fontSize: 13, fontWeight: FontWeight.w500)
             ),
           ),
         ],
@@ -1146,11 +1155,26 @@ class _LocalPharmacySection extends StatelessWidget {
             const SizedBox(height: 16),
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: AppNetworkImage(
-                imageUrl: 'https://images.pexels.com/photos/208512/pexels-photo-208512.jpeg?auto=compress&cs=tinysrgb&w=800',
+              child: Container(
                 height: 150,
                 width: double.infinity,
-                fit: BoxFit.cover,
+                color: const Color(0xFFE8EAED),
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: CustomPaint(
+                        painter: _MapPainterPlaceholder(),
+                      ),
+                    ),
+                    const Center(
+                      child: Icon(
+                        Icons.location_on_rounded,
+                        color: Color(0xFFE74C3C),
+                        size: 32,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 16),
@@ -1171,6 +1195,32 @@ class _LocalPharmacySection extends StatelessWidget {
       ),
     );
   }
+}
+
+class _MapPainterPlaceholder extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final bgPaint = Paint()..color = const Color(0xFFE8EAED);
+    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), bgPaint);
+
+    final roadPaint = Paint()
+      ..color = Colors.white
+      ..style = PaintingStyle.fill;
+
+    // Drawing basic road lines for a "map" look
+    for (var i = 0; i < 5; i++) {
+      final y = size.height * 0.1 + i * size.height * 0.25;
+      canvas.drawRect(Rect.fromLTWH(0, y, size.width, 6), roadPaint);
+    }
+
+    for (var i = 0; i < 4; i++) {
+      final x = size.width * 0.15 + i * size.width * 0.28;
+      canvas.drawRect(Rect.fromLTWH(x, 0, 6, size.height), roadPaint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 class _InfoRow extends StatelessWidget {
