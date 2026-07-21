@@ -790,7 +790,7 @@ class _VaccinationPromo extends StatelessWidget {
       title: 'Pharmacist vaccination appointments',
       content: 'Book an appointment for vaccinations currently available through Kersbrook Pharmacy. Eligibility and availability confirmed during booking.',
       buttonText: 'Book Online',
-      imageUrl: 'https://images.pexels.com/photos/3992933/pexels-photo-3992933.jpeg?auto=compress&cs=tinysrgb&w=800',
+      imageUrl: 'assets/vaccinations.png',
       isReversed: true,
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (_) => const VaccinationScreen()));
