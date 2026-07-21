@@ -808,7 +808,7 @@ class _MedAdvisorPromo extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
           child: Container(
-            padding: EdgeInsets.all(isNarrow ? 20 : 28),
+            padding: EdgeInsets.all(isNarrow ? 16 : 20),
             decoration: BoxDecoration(
               color: const Color(0xFFF4F9FF),
               borderRadius: BorderRadius.circular(24),
@@ -833,43 +833,37 @@ class _MedAdvisorPromo extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 20),
                 _benefitRow('Order prescriptions and repeats'),
                 _benefitRow('Receive medicine reminders'),
                 _benefitRow('Select collection or delivery'),
                 _benefitRow('Manage medicines for family members'),
-                const SizedBox(height: 32),
+                const SizedBox(height: 16),
                 Row(
                   children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (_) => const MedAdvisorInfoScreen()));
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF004080),
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                          elevation: 0,
-                        ),
-                        child: const Text('Log In'),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => const MedAdvisorInfoScreen()));
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF004080),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                        shape: const StadiumBorder(),
+                        elevation: 0,
                       ),
+                      child: const Text('Log In', style: TextStyle(fontSize: 14)),
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (_) => const MedAdvisorInfoScreen()));
-                        },
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: const Color(0xFF004080),
-                          side: const BorderSide(color: Color(0xFF004080)),
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                        ),
-                        child: const FittedBox(child: Text('How It Works')),
+                    const SizedBox(width: 16),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => const MedAdvisorInfoScreen()));
+                      },
+                      style: TextButton.styleFrom(
+                        foregroundColor: const Color(0xFF004080),
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
                       ),
+                      child: const Text('How It Works', style: TextStyle(fontSize: 14)),
                     ),
                   ],
                 ),
