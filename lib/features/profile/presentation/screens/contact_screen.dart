@@ -183,7 +183,7 @@ class _EnquiryFormState extends State<_EnquiryForm> {
         ),
         const SizedBox(height: 16),
         DropdownButtonFormField<String>(
-          value: _selectedType,
+          initialValue: _selectedType,
           hint: Text(
             'Select Enquiry Type',
             style: GoogleFonts.manrope(
