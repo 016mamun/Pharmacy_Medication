@@ -152,12 +152,12 @@ class _HomeHeader extends ConsumerWidget {
             children: [
               // Logo
               Expanded(
-                flex: 3,
+                flex: 5, // Given more space for the high-res logo
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Image.asset(
                     'assets/pharmacist_advice.png',
-                    height: isNarrow ? 28 : 36,
+                    height: isNarrow ? 30 : 40,
                     fit: BoxFit.contain,
                   ),
                 ),
@@ -773,7 +773,7 @@ class _WebsterPakPromo extends StatelessWidget {
       title: 'Free Webster-pak® medication packing',
       content: 'Make regular medicines easier to manage. Our pharmacists can organise suitable tablets and capsules into clearly labelled medication packs.',
       buttonText: 'Start the Service',
-      imageUrl: 'https://images.pexels.com/photos/5910956/pexels-photo-5910956.jpeg?auto=compress&cs=tinysrgb&w=800',
+      imageUrl: 'assets/Webster-pak.jpg',
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (_) => const WebsterPakScreen()));
       },
@@ -1160,7 +1160,9 @@ class _LocalPharmacySection extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: OutlinedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const ContactScreen()));
+                },
                 child: const Text('View Location & Hours'),
               ),
             ),
@@ -1230,7 +1232,7 @@ class _HealthInformationSection extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: 240, // Increased height to prevent text clipping
+          height: 195, // Optimized height to prevent overflow while keeping it tight
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 14),
@@ -1238,7 +1240,7 @@ class _HealthInformationSection extends StatelessWidget {
             itemBuilder: (context, index) {
               final article = articles[index];
               return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+                padding: const EdgeInsets.fromLTRB(6, 4, 6, 12), // Reduced top, added more bottom room for shadow
                 child: SizedBox(
                   width: 200,
                   child: Card3D(
@@ -1256,35 +1258,41 @@ class _HealthInformationSection extends StatelessWidget {
                     },
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         AppNetworkImage(
                           imageUrl: article['image']!,
-                          height: 100,
+                          height: 90, // Slightly reduced image height
                           width: double.infinity,
                           fit: BoxFit.cover,
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(12),
+                          padding: const EdgeInsets.fromLTRB(12, 8, 12, 10), // Tightened padding
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
                             children: [
                               SizedBox(
-                                height: 40, // Fixed height for 2 lines to align cards
+                                height: 36, // Tightened title box
                                 child: Text(
                                   article['title']!,
                                   style: GoogleFonts.manrope(
                                     fontSize: 13,
                                     fontWeight: FontWeight.w700,
-                                    height: 1.2,
+                                    height: 1.15,
                                   ),
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
-                              const SizedBox(height: 8),
+                              const SizedBox(height: 2), // Minimal gap
                               Text(
                                 article['subtitle']!,
-                                style: GoogleFonts.manrope(fontSize: 10, color: AppColors.grey),
+                                style: GoogleFonts.manrope(
+                                  fontSize: 10, 
+                                  color: AppColors.grey,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ],
                           ),

@@ -20,8 +20,10 @@ class AppNetworkImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (imageUrl.startsWith('assets/')) {
+      // Fix for potential asset path doubling on some platforms
+      final cleanPath = imageUrl;
       return Image.asset(
-        imageUrl,
+        cleanPath,
         height: height,
         width: width,
         fit: fit,

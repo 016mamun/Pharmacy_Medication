@@ -15,6 +15,7 @@ import 'package:pharmacy_medication/features/about/presentation/screens/about_sc
 import 'package:pharmacy_medication/features/about/presentation/screens/delivery_info_screen.dart';
 import 'package:pharmacy_medication/features/about/presentation/screens/legal_pages_screen.dart';
 import 'package:pharmacy_medication/features/prescription/presentation/screens/pharmacist_advice_form_screen.dart';
+import 'package:pharmacy_medication/features/profile/presentation/screens/profile_screen.dart';
 import 'package:pharmacy_medication/features/shop_selection/presentation/screens/shop_selection_screen.dart';
 
 class MainScreen extends ConsumerWidget {
@@ -92,6 +93,7 @@ class _AppDrawer extends StatelessWidget {
           _drawerItem(context, Icons.medical_services, 'Pharmacy Services', const ServicesListScreen()),
           _drawerItem(context, Icons.favorite_outline, 'Health Advice', const HealthAdviceScreen()),
           _drawerItem(context, Icons.info_outline, 'About Us', const AboutScreen()),
+          _drawerItem(context, Icons.person_outline, 'My Profile', const ProfileScreen()),
           _drawerItem(context, Icons.chat_bubble_outline, 'Ask a Pharmacist', const PharmacistAdviceFormScreen()),
           _drawerItem(context, Icons.local_shipping_outlined, 'Delivery Information', const DeliveryInfoScreen()),
           _drawerItem(context, Icons.gavel_outlined, 'Legal & Policies', const LegalPagesScreen()),

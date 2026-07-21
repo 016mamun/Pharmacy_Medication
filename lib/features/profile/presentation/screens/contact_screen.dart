@@ -10,11 +10,12 @@ class ContactScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.primary, // Using App Primary Color as background
       appBar: AppBar(
-        title: const Text('Contact Us'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20, color: Colors.white),
           onPressed: () {
             if (Navigator.canPop(context)) {
               Navigator.pop(context);
@@ -26,128 +27,88 @@ class ContactScreen extends ConsumerWidget {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Kersbrook Pharmacy',
+                "We're here to help",
                 style: GoogleFonts.manrope(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.textDark,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
                 ),
               ),
-              const SizedBox(height: 8),
               Text(
-                'Your local Adelaide Hills pharmacy',
+                "Enquire Online",
+                style: GoogleFonts.kaushanScript(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFFC5E1A5), // Light green highlight
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                "Complete the form and our team will be in touch with you shortly.",
                 style: GoogleFonts.manrope(
-                  fontSize: 14,
-                  color: AppColors.textLight,
+                  fontSize: 13,
+                  color: Colors.white.withValues(alpha: 0.9),
                 ),
               ),
               const SizedBox(height: 32),
-
-              _ContactInfoItem(
-                icon: Icons.location_on,
-                title: 'Address',
-                content: '16 Scott St, Kersbrook SA 5231',
-                onTap: () {},
-              ),
-              const SizedBox(height: 20),
-              _ContactInfoItem(
-                icon: Icons.phone,
-                title: 'Phone',
-                content: '08 8389 1205',
-                onTap: () {},
-              ),
-              const SizedBox(height: 20),
-              _ContactInfoItem(
-                icon: Icons.email,
-                title: 'Email',
-                content: 'kersbrook@pharmacistadvice.com.au',
-                onTap: () {},
-              ),
-              const SizedBox(height: 20),
-              _ContactInfoItem(
-                icon: Icons.access_time,
-                title: 'Opening Hours',
-                content: 'Mon-Fri: 9:00am - 6:00pm\nSat: 9:00am - 12:00pm\nSun: Closed',
-                onTap: () {},
-              ),
-
+              const _EnquiryForm(),
               const SizedBox(height: 40),
-              Text(
-                'Enquiry Form',
-                style: GoogleFonts.manrope(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.textDark,
-                ),
+              
+              // Footer Section
+              const Divider(color: Colors.white24),
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  const Icon(Icons.phone_outlined, color: Colors.white, size: 22),
+                  const SizedBox(width: 12),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Prefer to talk?",
+                        style: GoogleFonts.manrope(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
+                      ),
+                      Text(
+                        "08 8389 1205",
+                        style: GoogleFonts.manrope(
+                          color: Colors.white70,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
               const SizedBox(height: 16),
-              const _EnquiryForm(),
-              const SizedBox(height: 100),
+              Row(
+                children: [
+                  const Icon(Icons.email_outlined, color: Colors.white, size: 22),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      "kersbrook@pharmacistadvice.com.au",
+                      style: GoogleFonts.manrope(
+                        color: Colors.white70,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 120), // Bottom navigation space
             ],
           ),
         ),
       ),
-    );
-  }
-}
-
-class _ContactInfoItem extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String content;
-  final VoidCallback onTap;
-
-  const _ContactInfoItem({
-    required this.icon,
-    required this.title,
-    required this.content,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: AppColors.primaryLight,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Icon(icon, color: AppColors.primary, size: 20),
-        ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: GoogleFonts.manrope(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.textDark,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                content,
-                style: GoogleFonts.manrope(
-                  fontSize: 14,
-                  color: AppColors.textLight,
-                  height: 1.5,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
     );
   }
 }
@@ -173,63 +134,135 @@ class _EnquiryFormState extends State<_EnquiryForm> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const TextField(
-          decoration: InputDecoration(labelText: 'Name'),
-        ),
-        const SizedBox(height: 16),
-        const TextField(
-          decoration: InputDecoration(labelText: 'Email'),
-        ),
-        const SizedBox(height: 16),
-        DropdownButtonFormField<String>(
-          initialValue: _selectedType,
-          hint: Text(
-            'Select Enquiry Type',
-            style: GoogleFonts.manrope(
-              fontSize: 14,
-              color: AppColors.textLight,
-            ),
-          ),
-          decoration: const InputDecoration(
-            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          ),
-          items: _enquiryTypes.map((String type) {
-            return DropdownMenuItem<String>(
-              value: type,
-              child: Text(
-                type,
-                style: GoogleFonts.manrope(fontSize: 14),
-              ),
-            );
-          }).toList(),
-          onChanged: (String? newValue) {
-            setState(() {
-              _selectedType = newValue;
-            });
-          },
-          icon: const Icon(Icons.arrow_drop_down, color: AppColors.textLight),
-          dropdownColor: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        const SizedBox(height: 16),
-        const TextField(
-          maxLines: 4,
-          decoration: InputDecoration(labelText: 'Message'),
-        ),
+        _buildLabel("Full Name"),
+        _buildTextField("Your full name"),
+        
+        _buildLabel("Phone Number"),
+        _buildTextField("Your phone number", keyboardType: TextInputType.phone),
+        
+        _buildLabel("Email Address"),
+        _buildTextField("Your email address", keyboardType: TextInputType.emailAddress),
+        
+        _buildLabel("I am enquiring about"),
+        _buildDropdown(),
+        
+        _buildLabel("Message (optional)"),
+        _buildTextField("How can we help you?", maxLines: 4),
+        
         const SizedBox(height: 24),
         SizedBox(
           width: double.infinity,
+          height: 54,
           child: ElevatedButton(
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Thank you! Your enquiry has been sent.')),
               );
             },
-            child: const Text('Send Enquiry'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF43A047), // Brighter green for button
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            child: Text(
+              'Submit Enquiry',
+              style: GoogleFonts.manrope(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildLabel(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0, top: 16.0),
+      child: RichText(
+        text: TextSpan(
+          text: text,
+          style: GoogleFonts.manrope(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
+          children: const [
+            TextSpan(
+              text: " *",
+              style: TextStyle(color: Colors.redAccent),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField(String hint, {int maxLines = 1, TextInputType? keyboardType}) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: TextField(
+        maxLines: maxLines,
+        keyboardType: keyboardType,
+        style: GoogleFonts.manrope(fontSize: 14, color: AppColors.textDark),
+        decoration: InputDecoration(
+          hintText: hint,
+          hintStyle: GoogleFonts.manrope(fontSize: 14, color: Colors.grey),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide.none,
+          ),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDropdown() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: DropdownButtonFormField<String>(
+        initialValue: _selectedType,
+        hint: Text(
+          'Please select',
+          style: GoogleFonts.manrope(
+            fontSize: 14,
+            color: Colors.grey,
+          ),
+        ),
+        decoration: const InputDecoration(
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+        ),
+        items: _enquiryTypes.map((String type) {
+          return DropdownMenuItem<String>(
+            value: type,
+            child: Text(
+              type,
+              style: GoogleFonts.manrope(fontSize: 14, color: AppColors.textDark),
+            ),
+          );
+        }).toList(),
+        onChanged: (String? newValue) {
+          setState(() {
+            _selectedType = newValue;
+          });
+        },
+        icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.textDark),
+        dropdownColor: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+      ),
     );
   }
 }
