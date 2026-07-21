@@ -50,47 +50,8 @@ class HomeScreen extends ConsumerWidget {
               // Section 5: Nationwide Prescription Service
               const SliverToBoxAdapter(child: _NationwideServiceSection()),
 
-              // Section 6: Shop Popular Categories
-              const SliverToBoxAdapter(child: _PopularCategories()),
-
-              // Section 7-10: Promotions
-              const SliverToBoxAdapter(child: _WebsterPakPromo()),
-              const SliverToBoxAdapter(child: _VaccinationPromo()),
-              const SliverToBoxAdapter(child: _MedAdvisorPromo()),
-              const SliverToBoxAdapter(child: _PharmacistAdvicePromo()),
-
-              // Section 11: Featured Products
-              const SliverToBoxAdapter(child: _FeaturedProductsHeader()),
-              SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                sliver: SliverGrid(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: isNarrow ? 1 : (isNarrow ? 1 : 2), // We'll compute it dynamically or just use fixed
-                    mainAxisSpacing: 14,
-                    crossAxisSpacing: 14,
-                    mainAxisExtent: 260,
-                  ),
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final product = SampleData.featuredProducts[index];
-                      return _ProductCard(product: product);
-                    },
-                    childCount: SampleData.featuredProducts.length,
-                  ),
-                ),
-              ),
-
-              // Section 12: Local Pharmacy Section
-              const SliverToBoxAdapter(child: _LocalPharmacySection()),
-
               // Section 13: Health Information
               const SliverToBoxAdapter(child: _HealthInformationSection()),
-
-              // Section 14: Trust Strip
-              const SliverToBoxAdapter(child: _TrustStrip()),
-
-              // Section 15: Footer
-              const SliverToBoxAdapter(child: _AppFooter()),
             ],
           );
         },

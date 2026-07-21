@@ -36,6 +36,17 @@ class ProfileScreen extends ConsumerWidget {
                   children: [
                     Row(
                       children: [
+                        IconButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          icon: const Icon(
+                            Icons.arrow_back_ios_new_rounded,
+                            color: Colors.white,
+                            size: 18,
+                          ),
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                        ),
+                        const SizedBox(width: 12),
                         Text(
                           'Profile',
                           style: GoogleFonts.manrope(
@@ -78,13 +89,31 @@ class ProfileScreen extends ConsumerWidget {
                                 color: Colors.white,
                               ),
                             ),
-                            const SizedBox(height: 4),
-                            Text(
-                              'guest@pharmacy.com',
-                              style: GoogleFonts.manrope(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.white.withValues(alpha: 0.75),
+                            const SizedBox(height: 8),
+                            GestureDetector(
+                              onTap: () {
+                                // Navigate to Login
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 6,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: 0.2),
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(
+                                    color: Colors.white.withValues(alpha: 0.4),
+                                  ),
+                                ),
+                                child: Text(
+                                  'Sign In / Register',
+                                  style: GoogleFonts.manrope(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white,
+                                  ),
+                                ),
                               ),
                             ),
                           ],
@@ -246,7 +275,7 @@ class ProfileScreen extends ConsumerWidget {
 
               const SizedBox(height: 16),
 
-              // Logout
+              // Authentication
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Container(
@@ -262,10 +291,10 @@ class ProfileScreen extends ConsumerWidget {
                     ],
                   ),
                   child: _ProfileMenuItem(
-                    icon: Icons.logout_rounded,
-                    label: 'Logout',
-                    iconColor: AppColors.coral,
-                    labelColor: AppColors.coral,
+                    icon: Icons.login_rounded,
+                    label: 'Sign In / Register',
+                    iconColor: AppColors.primary,
+                    labelColor: AppColors.primary,
                     onTap: () {},
                   ),
                 ),
