@@ -212,12 +212,12 @@ class _HeroBannerState extends State<_HeroBanner> {
   final CarouselSliderController _controller = CarouselSliderController();
 
   static const List<String> _slides = [
-    'assets/Banner/1.1.png',
-    'assets/Banner/1.2.png',
-    'assets/Banner/1.3.png',
-    'assets/Banner/1.4.png',
-    'assets/Banner/1.5.png',
-    'assets/Banner/1.6.png',
+    'assets/Banner/2.1.png',
+    'assets/Banner/2.2.png',
+    'assets/Banner/2.3.png',
+    'assets/Banner/2.4.png',
+    'assets/Banner/2.5.png',
+    'assets/Banner/2.6.png',
   ];
 
   @override

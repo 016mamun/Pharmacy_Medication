@@ -4,6 +4,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:pharmacy_medication/core/theme/app_colors.dart';
 import 'package:pharmacy_medication/features/shop_selection/providers/shop_provider.dart';
 import 'package:pharmacy_medication/features/shop_selection/presentation/screens/shop_selection_screen.dart';
+import 'package:pharmacy_medication/features/profile/presentation/screens/my_account_screen.dart';
+import 'package:pharmacy_medication/features/profile/presentation/screens/my_orders_screen.dart';
+import 'package:pharmacy_medication/features/profile/presentation/screens/saved_addresses_screen.dart';
+import 'package:pharmacy_medication/features/profile/presentation/screens/notifications_screen.dart';
+import 'package:pharmacy_medication/features/profile/presentation/screens/help_support_screen.dart';
+import 'package:pharmacy_medication/features/auth/presentation/screens/login_screen.dart';
+import 'package:pharmacy_medication/features/about/presentation/screens/about_screen.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -92,7 +99,7 @@ class ProfileScreen extends ConsumerWidget {
                             const SizedBox(height: 8),
                             GestureDetector(
                               onTap: () {
-                                // Navigate to Login
+                                Navigator.push(context, MaterialPageRoute(builder: (_) => const LoginScreen()));
                               },
                               child: Container(
                                 padding: const EdgeInsets.symmetric(
@@ -236,37 +243,37 @@ class ProfileScreen extends ConsumerWidget {
                       _ProfileMenuItem(
                         icon: Icons.person_outline_rounded,
                         label: 'My Account',
-                        onTap: () {},
+                        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const MyAccountScreen())),
                       ),
                       _divider(),
                       _ProfileMenuItem(
                         icon: Icons.shopping_bag_outlined,
                         label: 'My Orders',
-                        onTap: () {},
+                        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const MyOrdersScreen())),
                       ),
                       _divider(),
                       _ProfileMenuItem(
                         icon: Icons.location_on_outlined,
                         label: 'Saved Addresses',
-                        onTap: () {},
+                        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SavedAddressesScreen())),
                       ),
                       _divider(),
                       _ProfileMenuItem(
                         icon: Icons.notifications_outlined,
                         label: 'Notifications',
-                        onTap: () {},
+                        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationsScreen())),
                       ),
                       _divider(),
                       _ProfileMenuItem(
                         icon: Icons.help_outline_rounded,
                         label: 'Help & Support',
-                        onTap: () {},
+                        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const HelpSupportScreen())),
                       ),
                       _divider(),
                       _ProfileMenuItem(
                         icon: Icons.info_outline_rounded,
                         label: 'About',
-                        onTap: () {},
+                        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AboutScreen())),
                       ),
                     ],
                   ),
@@ -295,7 +302,7 @@ class ProfileScreen extends ConsumerWidget {
                     label: 'Sign In / Register',
                     iconColor: AppColors.primary,
                     labelColor: AppColors.primary,
-                    onTap: () {},
+                    onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const LoginScreen())),
                   ),
                 ),
               ),
