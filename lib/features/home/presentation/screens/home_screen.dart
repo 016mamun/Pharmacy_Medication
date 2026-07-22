@@ -46,13 +46,19 @@ class HomeScreen extends ConsumerWidget {
               // Section 3: Hero Banner Carousel
               const SliverToBoxAdapter(child: _HeroBanner()),
 
-              // Section 4: Primary Service Cards
+              // Section 4: Feature Cards (horizontal scroll)
+              const SliverToBoxAdapter(child: _FeatureCardsSection()),
+
+              // Section 5: More Services Grid
+              const SliverToBoxAdapter(child: _MoreServicesSection()),
+
+              // Section 6: Primary Service Cards
               const SliverToBoxAdapter(child: _PrimaryServiceCards()),
 
-              // Section 5: Nationwide Prescription Service
+              // Section 7: Nationwide Prescription Service
               const SliverToBoxAdapter(child: _NationwideServiceSection()),
 
-              // Section 13: Health Information
+              // Section 8: Health Information
               const SliverToBoxAdapter(child: _HealthInformationSection()),
             ],
           );
@@ -272,6 +278,311 @@ class _HeroBannerState extends State<_HeroBanner> {
           const SizedBox(height: 8),
         ],
       ),
+    );
+  }
+}
+
+// ──────────────────────────────────────────────────────────
+// Feature Cards Section (horizontal scroll)
+// ──────────────────────────────────────────────────────────
+
+class _FeatureCardsSection extends StatelessWidget {
+  const _FeatureCardsSection();
+
+  static const List<Map<String, dynamic>> _features = [
+    {
+      'icon': Icons.video_call_rounded,
+      'badge': 'NEW',
+      'title': 'Monthly Video Call',
+      'subtitle': 'by a Geriatric Pharmacist',
+      'description': 'Personalised support, medication education and answers to your questions — from the comfort of your home.',
+      'color': Color(0xFF1565C0),
+      'bgColor': Color(0xFFE3F2FD),
+    },
+    {
+      'icon': Icons.local_shipping_rounded,
+      'badge': null,
+      'title': 'FREE Delivery',
+      'subtitle': 'Australia Wide',
+      'description': 'Your Webster-paks® and prescriptions delivered safely to your door — anywhere in Australia, at no extra cost.',
+      'color': Color(0xFF2E7D32),
+      'bgColor': Color(0xFFE8F5E9),
+    },
+    {
+      'icon': Icons.fact_check_rounded,
+      'badge': null,
+      'title': 'Complimentary',
+      'subtitle': 'Medication Review',
+      'description': 'Once a year, our pharmacists review your medicines to help ensure they are safe, effective and right for you.',
+      'color': Color(0xFFE65100),
+      'bgColor': Color(0xFFFFF3E0),
+    },
+    {
+      'icon': Icons.verified_rounded,
+      'badge': null,
+      'title': 'Medication',
+      'subtitle': 'Change Promise™',
+      'description': 'If your medication changes, eligible unused PBS medicines may qualify for a discretionary store credit or discount.',
+      'color': Color(0xFF6A1B9A),
+      'bgColor': Color(0xFFF3E5F5),
+    },
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 8, bottom: 12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Why Choose Us',
+                  style: GoogleFonts.manrope(fontSize: 16, fontWeight: FontWeight.w800, color: AppColors.textDark),
+                ),
+                Row(
+                  children: [
+                    Text(
+                      'See All',
+                      style: GoogleFonts.manrope(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.primary),
+                    ),
+                    const SizedBox(width: 4),
+                    const Icon(Icons.arrow_forward_ios_rounded, size: 12, color: AppColors.primary),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 185, // Further decreased height to reduce the gap
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.only(bottom: 12),
+              itemCount: _features.length,
+              itemBuilder: (context, index) {
+                final f = _features[index];
+                final color = f['color'] as Color;
+                final bgColor = f['bgColor'] as Color;
+                final badge = f['badge'] as String?;
+                return Container(
+                  width: 245, // Increased width to prevent text wrapping/overlap
+                  margin: EdgeInsets.only(right: index == _features.length - 1 ? 0 : 12),
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: color.withValues(alpha: 0.10),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                    border: Border.all(color: color.withValues(alpha: 0.12)),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              Container(
+                                width: 48,
+                                height: 48,
+                                decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+                                child: Icon(f['icon'] as IconData, color: Colors.white, size: 24),
+                              ),
+                              if (badge != null)
+                                Positioned(
+                                  top: -4,
+                                  right: -12,
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.accent, // Red color
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Text(badge, style: GoogleFonts.manrope(fontSize: 9, fontWeight: FontWeight.w800, color: Colors.white)),
+                                  ),
+                                ),
+                            ],
+                          ),
+                          const SizedBox(width: 18), // Increased spacing so badge doesn't overlap text
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  f['title'] as String,
+                                  style: GoogleFonts.manrope(fontSize: 13, fontWeight: FontWeight.w800, color: AppColors.textDark, height: 1.2),
+                                ),
+                                Text(
+                                  f['subtitle'] as String,
+                                  style: GoogleFonts.manrope(fontSize: 11, fontWeight: FontWeight.w700, color: color),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      Expanded(
+                        child: Text(
+                          f['description'] as String,
+                          style: GoogleFonts.manrope(fontSize: 11, color: AppColors.textLight, height: 1.4),
+                          maxLines: 4,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Text('Learn More', style: GoogleFonts.manrope(fontSize: 12, fontWeight: FontWeight.w800, color: AppColors.textDark)),
+                          const SizedBox(width: 6),
+                          Container(
+                            padding: const EdgeInsets.all(2),
+                            decoration: const BoxDecoration(color: AppColors.accent, shape: BoxShape.circle),
+                            child: const Icon(Icons.arrow_forward_rounded, size: 12, color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: 8),
+        ],
+      ),
+    );
+  }
+}
+
+// ──────────────────────────────────────────────────────────
+// More Services Grid Section
+// ──────────────────────────────────────────────────────────
+
+class _MoreServicesSection extends StatelessWidget {
+  const _MoreServicesSection();
+
+  static const List<Map<String, dynamic>> _services = [
+    {'icon': Icons.vaccines_outlined, 'title': 'Vaccination', 'subtitle': 'Flu, COVID-19 & more'},
+    {'icon': Icons.favorite_border_rounded, 'title': 'Heart Health', 'subtitle': 'Know your heart health'},
+    {'icon': Icons.bloodtype_outlined, 'title': 'BP', 'subtitle': 'Blood pressure check'},
+    {'icon': Icons.monitor_heart_outlined, 'title': 'BGL', 'subtitle': 'Blood glucose check'},
+    {'icon': Icons.air_outlined, 'title': 'Inhaler Technique', 'subtitle': 'Breathe with confidence'},
+    {'icon': Icons.science_outlined, 'title': 'Compounding', 'subtitle': 'Custom medicines'},
+    {'icon': Icons.receipt_long_outlined, 'title': 'Online Scripts', 'subtitle': 'Fast & convenient'},
+    {'icon': Icons.shopping_cart_outlined, 'title': 'Shop Online', 'subtitle': 'Vitamins & more'},
+    {'icon': Icons.medication_outlined, 'title': 'Free Webster-pak®', 'subtitle': 'Medication packs'},
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const SizedBox(height: 32),
+        Text('MORE THAN A PHARMACY', style: GoogleFonts.manrope(fontSize: 12, fontWeight: FontWeight.w800, color: Colors.red.shade700, letterSpacing: 1.2)),
+        const SizedBox(height: 8),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Text(
+            'Expert Care. More Services. Better Health.',
+            textAlign: TextAlign.center,
+            style: GoogleFonts.manrope(fontSize: 20, fontWeight: FontWeight.w800, color: AppColors.primary, height: 1.2),
+          ),
+        ),
+        const SizedBox(height: 24),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final isNarrow = constraints.maxWidth < 400;
+              final crossAxisCount = isNarrow ? 3 : 4;
+              return GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                padding: EdgeInsets.zero,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: crossAxisCount,
+                  mainAxisExtent: 140, // Fixed height to prevent huge gaps!
+                  crossAxisSpacing: 8,
+                  mainAxisSpacing: 16,
+                ),
+                itemCount: _services.length,
+                itemBuilder: (context, index) {
+                  final service = _services[index];
+                return Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.primary.withValues(alpha: 0.08),
+                        blurRadius: 15,
+                        offset: const Offset(0, 5),
+                      ),
+                    ],
+                    border: Border.all(color: AppColors.primary.withValues(alpha: 0.05)),
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              AppColors.primary.withValues(alpha: 0.15),
+                              AppColors.primary.withValues(alpha: 0.05),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Center(
+                          child: Icon(service['icon'] as IconData, color: AppColors.primary, size: 24),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        service['title'] as String,
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.manrope(fontSize: 12, fontWeight: FontWeight.w800, color: AppColors.textDark, height: 1.1),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        service['subtitle'] as String,
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.manrope(fontSize: 10, fontWeight: FontWeight.w600, color: AppColors.textLight, height: 1.2),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                );
+              },
+            );
+          }
+        ),
+      ),
+        const SizedBox(height: 16),
+      ],
     );
   }
 }
