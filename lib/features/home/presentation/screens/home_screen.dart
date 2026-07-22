@@ -8,7 +8,6 @@ import 'package:pharmacy_medication/shared/models/product_model.dart';
 import 'package:pharmacy_medication/features/services/presentation/screens/webster_pak_screen.dart';
 import 'package:pharmacy_medication/features/services/presentation/screens/vaccination_screen.dart';
 import 'package:pharmacy_medication/features/services/presentation/screens/medadvisor_info_screen.dart';
-import 'package:pharmacy_medication/shared/widgets/app_network_image.dart';
 import 'package:pharmacy_medication/features/cart/providers/cart_provider.dart';
 
 import 'package:pharmacy_medication/features/cart/presentation/screens/cart_screen.dart';
@@ -23,6 +22,9 @@ import 'package:pharmacy_medication/features/about/presentation/screens/delivery
 import 'package:pharmacy_medication/features/prescription/presentation/screens/escript_submission_screen.dart';
 import 'package:pharmacy_medication/features/prescription/presentation/screens/pharmacist_advice_form_screen.dart';
 import 'package:pharmacy_medication/features/health_advice/presentation/screens/health_advice_article_screen.dart';
+import 'package:pharmacy_medication/shared/widgets/app_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -41,7 +43,7 @@ class HomeScreen extends ConsumerWidget {
               // Section 2: Header
               const SliverToBoxAdapter(child: _HomeHeader()),
 
-              // Section 3: Hero Banner
+              // Section 3: Hero Banner Carousel
               const SliverToBoxAdapter(child: _HeroBanner()),
 
               // Section 4: Primary Service Cards
@@ -198,109 +200,76 @@ class _HomeHeader extends ConsumerWidget {
   }
 }
 
-class _HeroBanner extends ConsumerWidget {
+class _HeroBanner extends StatefulWidget {
   const _HeroBanner();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
-      margin: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppColors.secondary,
-        borderRadius: BorderRadius.circular(24),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: Stack(
+  State<_HeroBanner> createState() => _HeroBannerState();
+}
+
+class _HeroBannerState extends State<_HeroBanner> {
+  int _currentIndex = 0;
+  final CarouselSliderController _controller = CarouselSliderController();
+
+  static const List<String> _slides = [
+    'assets/Banner/1.1.png',
+    'assets/Banner/1.2.png',
+    'assets/Banner/1.3.png',
+    'assets/Banner/1.4.png',
+    'assets/Banner/1.5.png',
+    'assets/Banner/1.6.png',
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Column(
         children: [
-          Positioned.fill(
-            child: AppNetworkImage(
-              imageUrl: 'https://images.pexels.com/photos/5910953/pexels-photo-5910953.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-              fit: BoxFit.cover,
-            ),
-          ),
-          Positioned.fill(
-            child: Container(
-              color: AppColors.secondary.withValues(alpha: 0.7),
-            ),
-          ),
-          LayoutBuilder(
-            builder: (context, constraints) {
-              return Padding(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Your trusted Kersbrook pharmacy—now delivering prescriptions across Australia',
-                      style: GoogleFonts.manrope(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w800,
-                        color: Colors.white,
-                        height: 1.2,
-                      ),
+          CarouselSlider(
+            carouselController: _controller,
+            items: _slides.map((imagePath) {
+              return ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Image.asset(
+                  imagePath,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => Container(
+                    color: Colors.grey.shade200,
+                    child: const Center(
+                      child: Icon(Icons.broken_image_outlined,
+                          color: Colors.grey, size: 40),
                     ),
-                    const SizedBox(height: 12),
-                    Text(
-                      'Order prescriptions, shop pharmacy essentials, book vaccinations and access personal pharmacist support.',
-                      style: GoogleFonts.manrope(
-                        fontSize: 14,
-                        color: Colors.white.withValues(alpha: 0.9),
-                        height: 1.5,
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    Wrap(
-                      spacing: 12,
-                      runSpacing: 12,
-                      children: [
-                        SizedBox(
-                          width: constraints.maxWidth < 300 ? double.infinity : (constraints.maxWidth - 48 - 12) / 2,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              ref.read(bottomNavIndexProvider.notifier).state = 2;
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.accent,
-                              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
-                            ),
-                            child: const FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(
-                                'Order Prescription',
-                                maxLines: 1,
-                                style: TextStyle(fontSize: 13),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: constraints.maxWidth < 300 ? double.infinity : (constraints.maxWidth - 48 - 12) / 2,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              ref.read(bottomNavIndexProvider.notifier).state = 1;
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              foregroundColor: AppColors.primary,
-                              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
-                            ),
-                            child: const FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(
-                                'Shop Online',
-                                maxLines: 1,
-                                style: TextStyle(fontSize: 13),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                  ),
                 ),
               );
-            }
+            }).toList(),
+            options: CarouselOptions(
+              aspectRatio: 2.1,
+              viewportFraction: 1.0,
+              autoPlay: true,
+              autoPlayInterval: const Duration(seconds: 4),
+              autoPlayAnimationDuration: const Duration(milliseconds: 700),
+              autoPlayCurve: Curves.easeInOut,
+              onPageChanged: (index, _) {
+                setState(() => _currentIndex = index);
+              },
+            ),
           ),
+          const SizedBox(height: 10),
+          AnimatedSmoothIndicator(
+            activeIndex: _currentIndex,
+            count: _slides.length,
+            effect: ExpandingDotsEffect(
+              activeDotColor: AppColors.primary,
+              dotColor: AppColors.primary.withValues(alpha: 0.25),
+              dotHeight: 6,
+              dotWidth: 6,
+              expansionFactor: 3,
+            ),
+          ),
+          const SizedBox(height: 8),
         ],
       ),
     );
