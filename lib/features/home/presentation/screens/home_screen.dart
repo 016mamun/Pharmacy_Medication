@@ -52,6 +52,9 @@ class HomeScreen extends ConsumerWidget {
               // Section 5: More Services Grid
               const SliverToBoxAdapter(child: _MoreServicesSection()),
 
+              // Section 5.5: Webster Banner Card
+              const SliverToBoxAdapter(child: _WebsterBannerCard()),
+
               // Section 6: Primary Service Cards
               const SliverToBoxAdapter(child: _PrimaryServiceCards()),
 
@@ -751,11 +754,304 @@ class _ServiceCard extends StatelessWidget {
   }
 }
 
+// ──────────────────────────────────────────────────────────
+// Webster Banner Card Section
+// ──────────────────────────────────────────────────────────
+
+class _WebsterBannerCard extends StatelessWidget {
+  const _WebsterBannerCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Banner image card
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.primary.withValues(alpha: 0.18),
+                  blurRadius: 20,
+                  offset: const Offset(0, 8),
+                ),
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.06),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Stack(
+                children: [
+                  Image.asset(
+                    'assets/webster_banner.png',
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => Container(
+                      height: 160,
+                      color: AppColors.primaryLight,
+                      child: Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.calendar_view_month, color: AppColors.primary, size: 48),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Free Webster-pak®',
+                              style: GoogleFonts.manrope(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w800,
+                                color: AppColors.primary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned.fill(
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (_) => const WebsterPakScreen()),
+                          );
+                        },
+                        splashColor: Colors.white.withValues(alpha: 0.15),
+                        highlightColor: Colors.transparent,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 14),
+
+          // "Learn More About Webster®" red button — below the image
+          SizedBox(
+            height: 52,
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const WebsterPakScreen()),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFCC1B1B),
+                foregroundColor: Colors.white,
+                elevation: 4,
+                shadowColor: const Color(0xFFCC1B1B).withValues(alpha: 0.4),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Learn More About Webster®',
+                    style: GoogleFonts.manrope(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.white,
+                      letterSpacing: 0.2,
+                    ),
+                  ),
+                  Container(
+                    width: 30,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.25),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.arrow_forward_rounded,
+                      color: Colors.white,
+                      size: 18,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 28),
+
+          // HOW IT WORKS header
+          Text(
+            'HOW IT WORKS',
+            style: GoogleFonts.manrope(
+              fontSize: 12,
+              fontWeight: FontWeight.w800,
+              color: const Color(0xFFCC1B1B),
+              letterSpacing: 1.4,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            '4 Simple Steps',
+            style: GoogleFonts.manrope(
+              fontSize: 22,
+              fontWeight: FontWeight.w800,
+              color: AppColors.primary,
+              height: 1.2,
+            ),
+          ),
+
+          const SizedBox(height: 20),
+
+          // 4 Steps horizontal scroll
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _WebsterStep(
+                  number: '1',
+                  icon: Icons.phone_rounded,
+                  title: 'Contact Us',
+                  description: 'Call, email or complete our online form.',
+                ),
+                const _StepArrow(),
+                _WebsterStep(
+                  number: '2',
+                  icon: Icons.assignment_rounded,
+                  title: 'We Organise Everything',
+                  description: 'We liaise with your doctor & handle the paperwork.',
+                ),
+                const _StepArrow(),
+                _WebsterStep(
+                  number: '3',
+                  icon: Icons.medication_rounded,
+                  title: 'We Prepare Your Medicines',
+                  description: 'Professionally packed & pharmacist checked with care.',
+                ),
+                const _StepArrow(),
+                _WebsterStep(
+                  number: '4',
+                  icon: Icons.local_shipping_rounded,
+                  title: 'FREE Delivery to Your Door',
+                  description: 'Delivered anywhere in Australia.',
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 8),
+        ],
+      ),
+    );
+  }
+}
+
+class _WebsterStep extends StatelessWidget {
+  final String number;
+  final IconData icon;
+  final String title;
+  final String description;
+
+  const _WebsterStep({
+    required this.number,
+    required this.icon,
+    required this.title,
+    required this.description,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 88,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Icon circle
+          Container(
+            width: 60,
+            height: 60,
+            decoration: BoxDecoration(
+              color: AppColors.primary.withValues(alpha: 0.07),
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: AppColors.primary.withValues(alpha: 0.15),
+                width: 1.5,
+              ),
+            ),
+            child: Icon(icon, color: AppColors.primary, size: 28),
+          ),
+          const SizedBox(height: 8),
+          // Red number
+          Text(
+            number,
+            style: GoogleFonts.manrope(
+              fontSize: 18,
+              fontWeight: FontWeight.w900,
+              color: const Color(0xFFCC1B1B),
+            ),
+          ),
+          const SizedBox(height: 4),
+          // Bold title
+          Text(
+            title,
+            textAlign: TextAlign.center,
+            style: GoogleFonts.manrope(
+              fontSize: 11,
+              fontWeight: FontWeight.w800,
+              color: AppColors.primary,
+              height: 1.3,
+            ),
+          ),
+          const SizedBox(height: 4),
+          // Description
+          Text(
+            description,
+            textAlign: TextAlign.center,
+            style: GoogleFonts.manrope(
+              fontSize: 10,
+              fontWeight: FontWeight.w500,
+              color: AppColors.textLight,
+              height: 1.3,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _StepArrow extends StatelessWidget {
+  const _StepArrow();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 18, left: 4, right: 4),
+      child: Icon(
+        Icons.arrow_forward_rounded,
+        color: AppColors.primary.withValues(alpha: 0.4),
+        size: 20,
+      ),
+    );
+  }
+}
+
 class _NationwideServiceSection extends StatelessWidget {
   const _NationwideServiceSection();
 
   @override
   Widget build(BuildContext context) {
+
+
+
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
       padding: const EdgeInsets.all(28),
