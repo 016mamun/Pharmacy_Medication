@@ -21,6 +21,7 @@ import 'package:pharmacy_medication/features/about/presentation/screens/delivery
 
 import 'package:pharmacy_medication/features/prescription/presentation/screens/escript_submission_screen.dart';
 import 'package:pharmacy_medication/features/prescription/presentation/screens/pharmacist_advice_form_screen.dart';
+import 'package:pharmacy_medication/features/services/presentation/screens/service_details_screen.dart';
 import 'package:pharmacy_medication/features/health_advice/presentation/screens/health_advice_article_screen.dart';
 import 'package:pharmacy_medication/shared/widgets/app_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -473,23 +474,104 @@ class _FeatureCardsSection extends StatelessWidget {
 // More Services Grid Section
 // ──────────────────────────────────────────────────────────
 
-class _MoreServicesSection extends StatelessWidget {
+class _MoreServicesSection extends ConsumerWidget {
   const _MoreServicesSection();
 
   static const List<Map<String, dynamic>> _services = [
-    {'icon': Icons.vaccines_outlined, 'title': 'Vaccination', 'subtitle': 'Flu, COVID-19 & more'},
-    {'icon': Icons.favorite_border_rounded, 'title': 'Heart Health', 'subtitle': 'Know your heart health'},
-    {'icon': Icons.bloodtype_outlined, 'title': 'BP', 'subtitle': 'Blood pressure check'},
-    {'icon': Icons.monitor_heart_outlined, 'title': 'BGL', 'subtitle': 'Blood glucose check'},
-    {'icon': Icons.air_outlined, 'title': 'Inhaler Technique', 'subtitle': 'Breathe with confidence'},
-    {'icon': Icons.science_outlined, 'title': 'Compounding', 'subtitle': 'Custom medicines'},
-    {'icon': Icons.receipt_long_outlined, 'title': 'Online Scripts', 'subtitle': 'Fast & convenient'},
-    {'icon': Icons.shopping_cart_outlined, 'title': 'Shop Online', 'subtitle': 'Vitamins & more'},
-    {'icon': Icons.medication_outlined, 'title': 'Free Webster-pak®', 'subtitle': 'Medication packs'},
+    {
+      'icon': Icons.vaccines_outlined,
+      'title': 'Vaccination',
+      'subtitle': 'Flu, COVID-19 & more',
+      'description': 'We offer a range of pharmacist-administered vaccinations including flu, COVID-19, shingles, and more. No appointment necessary for most vaccines.',
+      'route': 'vaccination',
+    },
+    {
+      'icon': Icons.favorite_border_rounded,
+      'title': 'Heart Health',
+      'subtitle': 'Know your heart health',
+      'description': 'Our pharmacists can assess your heart health risk, check cholesterol levels, and provide guidance on reducing cardiovascular risk factors.',
+      'route': 'details',
+    },
+    {
+      'icon': Icons.bloodtype_outlined,
+      'title': 'BP',
+      'subtitle': 'Blood pressure check',
+      'description': 'Free blood pressure checks are available at our pharmacy. High blood pressure often has no symptoms — get checked today.',
+      'route': 'details',
+    },
+    {
+      'icon': Icons.monitor_heart_outlined,
+      'title': 'BGL',
+      'subtitle': 'Blood glucose check',
+      'description': 'Our pharmacists offer blood glucose level testing to help monitor and manage diabetes or identify early warning signs.',
+      'route': 'details',
+    },
+    {
+      'icon': Icons.air_outlined,
+      'title': 'Inhaler Technique',
+      'subtitle': 'Breathe with confidence',
+      'description': 'Correct inhaler technique makes a big difference. Our pharmacists will show you how to use your inhaler properly for best results.',
+      'route': 'details',
+    },
+    {
+      'icon': Icons.science_outlined,
+      'title': 'Compounding',
+      'subtitle': 'Custom medicines',
+      'description': 'We prepare customised medicines tailored to your individual needs — ideal when standard medicines are not suitable or available.',
+      'route': 'details',
+    },
+    {
+      'icon': Icons.receipt_long_outlined,
+      'title': 'Online Scripts',
+      'subtitle': 'Fast & convenient',
+      'description': 'Send your eScript or order prescription repeats online. Our pharmacists will review and dispense your medication for delivery or collection.',
+      'route': 'scripts',
+    },
+    {
+      'icon': Icons.shopping_cart_outlined,
+      'title': 'Shop Online',
+      'subtitle': 'Vitamins & more',
+      'description': 'Browse our online store for vitamins, supplements, health products, beauty items, and more — delivered Australia wide.',
+      'route': 'shop',
+    },
+    {
+      'icon': Icons.medication_outlined,
+      'title': 'Free Webster-pak®',
+      'subtitle': 'Medication packs',
+      'description': 'We pack your regular medicines into a Webster-pak® — sorted by day and time — and deliver them FREE anywhere in Australia.',
+      'route': 'webster',
+    },
   ];
 
+  void _onServiceTap(BuildContext context, WidgetRef ref, Map<String, dynamic> service) {
+    final route = service['route'] as String;
+    switch (route) {
+      case 'vaccination':
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => const VaccinationScreen()));
+        break;
+      case 'scripts':
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => const EScriptSubmissionScreen()));
+        break;
+      case 'shop':
+        ref.read(bottomNavIndexProvider.notifier).state = 1;
+        break;
+      case 'webster':
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => const WebsterPakScreen()));
+        break;
+      case 'details':
+      default:
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (_) => ServiceDetailsScreen(
+            title: service['title'] as String,
+            description: service['description'] as String,
+            icon: service['icon'] as IconData,
+          ),
+        ));
+    }
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -517,73 +599,76 @@ class _MoreServicesSection extends StatelessWidget {
                 padding: EdgeInsets.zero,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: crossAxisCount,
-                  mainAxisExtent: 140, // Fixed height to prevent huge gaps!
+                  mainAxisExtent: 140,
                   crossAxisSpacing: 8,
                   mainAxisSpacing: 16,
                 ),
                 itemCount: _services.length,
                 itemBuilder: (context, index) {
                   final service = _services[index];
-                return Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.primary.withValues(alpha: 0.08),
-                        blurRadius: 15,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
-                    border: Border.all(color: AppColors.primary.withValues(alpha: 0.05)),
-                  ),
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 48,
-                        height: 48,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              AppColors.primary.withValues(alpha: 0.15),
-                              AppColors.primary.withValues(alpha: 0.05),
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
+                  return GestureDetector(
+                    onTap: () => _onServiceTap(context, ref, service),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.primary.withValues(alpha: 0.08),
+                            blurRadius: 15,
+                            offset: const Offset(0, 5),
                           ),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Center(
-                          child: Icon(service['icon'] as IconData, color: AppColors.primary, size: 24),
-                        ),
+                        ],
+                        border: Border.all(color: AppColors.primary.withValues(alpha: 0.05)),
                       ),
-                      const SizedBox(height: 10),
-                      Text(
-                        service['title'] as String,
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.manrope(fontSize: 12, fontWeight: FontWeight.w800, color: AppColors.textDark, height: 1.1),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 48,
+                            height: 48,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  AppColors.primary.withValues(alpha: 0.15),
+                                  AppColors.primary.withValues(alpha: 0.05),
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Center(
+                              child: Icon(service['icon'] as IconData, color: AppColors.primary, size: 24),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            service['title'] as String,
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.manrope(fontSize: 12, fontWeight: FontWeight.w800, color: AppColors.textDark, height: 1.1),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            service['subtitle'] as String,
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.manrope(fontSize: 10, fontWeight: FontWeight.w600, color: AppColors.textLight, height: 1.2),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 4),
-                      Text(
-                        service['subtitle'] as String,
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.manrope(fontSize: 10, fontWeight: FontWeight.w600, color: AppColors.textLight, height: 1.2),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
-                );
-              },
-            );
-          }
+                    ),
+                  );
+                },
+              );
+            },
+          ),
         ),
-      ),
         const SizedBox(height: 16),
       ],
     );
